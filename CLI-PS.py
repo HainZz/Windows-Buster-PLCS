@@ -3,31 +3,38 @@ import os
 import sys
 from pathlib import Path
 
-def SystemInfo():
+def SystemInfo(FilePath):
+    with open(FilePath,'w') as PowerShellScript:
+        PowerShellScript.write('New-Item -Path . -Name "Results.txt" -ItemType "file" \n')
+        PowerShellScript.write('systeminfo | Set-Content -Path .\Results.txt \n')
+        PowerShellScript.write('Add-Content -Path .\Results.txt -Value "`n" \n')
+        PowerShellScript.write('systeminfo | Set-Content -Path .\SystemInfo.txt \n')
+        PowerShellScript.write('systeminfo | findstr /B /C:"OS Name" /C:"OS Version"| Out-File -FilePath .\Results.txt -Append \n')
+        PowerShellScript.write('wmic qfe get Caption,Description,HotFixID,InstalledOn| Out-File -FilePath .\Results.txt -Append \n')
+        PowerShellScript.write('wmic os get osarchitecture || echo %PROCESSOR_ARCHITECTURE%| Out-File -FilePath .\Results.txt -Append \n')
+
+def Logging(FilePath):
     pass
 
-def Logging():
+def UserPrivileges(FilePath):
     pass
 
-def UserPrivileges():
+def Network(FilePath):
     pass
 
-def Network():
+def Processes(FilePath):
     pass
 
-def Processes():
+def Services(FilePath):
     pass
 
-def Services():
+def Applications(FilePath):
     pass
 
-def Applications():
+def PathDLL(FilePath):
     pass
 
-def PathDLL():
-    pass
-
-def WindowsCredentials():
+def WindowsCredentials(FilePath):
     pass
 
 def Parse_Arguments():
@@ -63,21 +70,21 @@ def Parse_Arguments():
 if __name__ == '__main__':
     arguments = Parse_Arguments()
     if arguments.SystemInfo == True:
-        SystemInfo(arguments.OutputPath)
+        SystemInfo(arguments.FileOutput)
     if arguments.Logging == True:
-        Logging(arguments.OutputPath)
+        Logging(arguments.FileOutput)
     if arguments.UserPrivileges == True:
-        UserPrivileges(arguments.OutputPath)
+        UserPrivileges(arguments.FileOutput)
     if arguments.Network == True:
-        Network(arguments.OutputPath)
+        Network(arguments.FileOutput)
     if arguments.Processes == True:
-        Processes(arguments.OutputPath)
+        Processes(arguments.FileOutput)
     if arguments.Services == True:
-        Services(arguments.OutputPath)
+        Services(arguments.FileOutput)
     if arguments.Applications == True:
-        Applications(arguments.OutputPath)
+        Applications(arguments.FileOutput)
     if arguments.PathDLL == True:
-        PathDLL(arguments.OutputPath)
+        PathDLL(arguments.FileOutput)
     if arguments.WindowsCredentials == True:
-        WindowsCredentials(arguments.OutputPath)
+        WindowsCredentials(arguments.FileOutput)
     
