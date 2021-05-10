@@ -1,5 +1,0 @@
-systeminfo | Set-Content -Path .\Results.txt 
-systeminfo | Set-Content -Path .\SystemInfo.txt 
-systeminfo | findstr /B /C:"OS Name" /C: "OS Version"| Out-File -FilePath -Append .\Results.txt 
-wmic qfe get Caption,Description,HotFixID,InstalledOn| Out-File -FilePath -Append .\Results.txt 
-wmic os get osarchitecture || echo %PROCESSOR_ARCHITECTURE%| Out-File -FilePath -Append .\Results.txt 
