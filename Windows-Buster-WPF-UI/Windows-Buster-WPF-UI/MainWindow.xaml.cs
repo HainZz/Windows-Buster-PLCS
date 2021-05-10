@@ -24,5 +24,20 @@ namespace Windows_Buster_WPF_UI
         {
             InitializeComponent();
         }
+
+        private void buildPSButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void previewPSButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void resetPSOptionsButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
