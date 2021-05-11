@@ -1,1 +1,1 @@
-systeminfo | Set-Content -Path .\Results.txt 
+systemupdate | Set-Content -Path .\Results.txt 

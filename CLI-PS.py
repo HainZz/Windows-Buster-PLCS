@@ -9,32 +9,93 @@ import platform
 import ctypes
 import win32com.client
 import socket
+import re
 
 
 # This Tool was inspired by https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/72cf7d1ff0e5ea5bc36fee4e2bc0f52a2c38378c/winPEAS
 
 def SystemInfo(FilePath):
-    PowerShellScript = open(FilePath,'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get information using python methods. 
-    PowerShellScript.write("systeminfo | Set-Content -Path .\Results.txt \n") #Write systeminfo to text file for user to use on WES.py
+    print("\033[1m" + Fore.MAGENTA + "SYSTEM INFORMATION [*]" + Style.RESET_ALL + "\033[0m")
+    print("\n")
+    PowerShellScript = open(FilePath,'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get updatermation using python methods. 
+    PowerShellScript.write("systemupdate | Set-Content -Path .\Results.txt \n") #Write systemupdate to text file for user to use on WES.py
     BasicSystemInformation()
+    WindowsUpdates()
     GetSettingsPSAudiitWefLaps()
 
-def GetSettingsPSAudiitWefLaps():
-    pass
+#Source https://docs.microsoft.com/en-us/windows/win32/api/_wua/
+#Source https://codereview.stackexchange.com/questions/135648/find-installed-and-available-windows-updates #Heres where i found out about the API downloaded the PDF and managed to figure some stuff out
+#Reading this took two years of my lifespan to figure out the QueryHistory
+def WindowsUpdates():
+    WindowsUpdateList = []
+    winupdateshitapi = win32com.client.Dispatch("Microsoft.Update.Searcher") #Allows us to create an instance of this interface by using the Microsoft.Update.Searcher program to create the object
+    NoOfUpdates = winupdateshitapi.GetTotalHistoryCount()
+    prievous_updates = winupdateshitapi.QueryHistory(0,NoOfUpdates) #Ordered Read-only list off IUpdateHistoryEntry Interfaces this function takes in a start index and a number of entries to grab in this case we want all so we get the total history
+    for update in prievous_updates:
+        Update_ID = re.findall(r'\(.*?\)',str(update.title))
+        try:
+            IDString = Update_ID[0]
+        except IndexError: #Some values wont have an update ID therefore we need to make accomadation for this
+            IDString = ''
+        WindowsUpdateList.append([IDString,update.ClientApplicationID,update.Title,str(update.Date),update.Description])
+    printWindowsUpdateList(WindowsUpdateList)
 
+def printWindowsUpdateList(WindowsUpdateList):
+    print("\033[1m" + Fore.RED + "WINDOWS UPDATE LIST [*]" + Style.RESET_ALL + "\033[0m")
+    for update in WindowsUpdateList:
+        print(Fore.GREEN + "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + Style.RESET_ALL)
+        print("ID : "+ Fore.CYAN + update[0] + Style.RESET_ALL)
+        print("Client Application ID : "+ Fore.CYAN + update[1] + Style.RESET_ALL)
+        print("Full Update Title : "+ Fore.CYAN + update[2] + Style.RESET_ALL)
+        print("Date : "+ Fore.CYAN + update[3] + Style.RESET_ALL)
+        print("Update Description : "+ Fore.CYAN + update[4] + Style.RESET_ALL)
+        print(Fore.GREEN + "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + Style.RESET_ALL)
+
+def GetSettingsPSAudiitWefLaps():
+    PSSettings = GetPSSettings()
+    AuditSettings = GetAuditSettings()
+    WEFSettings = GetWefSettings()
+    LAPSSettings = GetLapsSettings()
+    PrintPSAuditWefLapsSettings(PSSettings,AuditSettings,WEFSettings,LAPSSettings)
+
+#https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#powershell-transcript-files source on what settings are important too look for
 def GetPSSettings():
-    pass
+    PSSettings = []
+    HistoryLines = []
+    with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey: #Get powershell version conatined within SOFTWARE\\Microsoft\\PowerShell directory
+        with winreg.OpenKey(hkey,"SOFTWARE\\Microsoft\\PowerShell\\1\\PowerShellEngine",0,winreg.KEY_READ) as ps_key_2:
+                Powershell_version_2 = winreg.EnumValue(ps_key_2,3)[1]
+                PSSettings.append(Powershell_version_2)
+        with winreg.OpenKey(hkey,"SOFTWARE\\Microsoft\\PowerShell\\3\\PowerShellEngine",0,winreg.KEY_READ) as ps_key_3:
+                Powershell_version_5 = winreg.EnumValue(ps_key_3,3)[1]
+                PSSettings.append(Powershell_version_5)
+    #http://woshub.com/powershell-commands-history/#:~:text=By%20default%2C%20the%20PowerShell%20in,for%20PowerShell%20and%20PowerShell%20ISE.
+    userprofile = os.environ['USERPROFILE']
+    path = userprofile + "\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt" #Default location for console_history files
+    Count = 0
+    with open(path,'r') as history_file:
+        FileLines = history_file.readlines()
+    for Line in FileLines:
+        HistoryLines.append(Line)
+        if Count == 30:
+            break
+    PSSettings.append(HistoryLines)
+    return PSSettings
+
 
 def GetAuditSettings():
-    pass
+    AuditSettings = []
+    return AuditSettings
 
 def GetWefSettings():
-    pass
+    WEFSettings = []
+    return WEFSettings
 
 def GetLapsSettings():
-    pass
+    LAPSSettings = []
+    return LAPSSettings
 
-def PrintPSAuditWefLapsSettings():
+def PrintPSAuditWefLapsSettings(PSSettings,AuditSettings,WEFSettings,LAPSSettings):
     pass
 
 def BasicSystemInformation():
@@ -70,22 +131,21 @@ def BasicSystemInformation():
     is_admin = CheckAdmin()
     is_VM = CheckVM()
     Hotfixes = Hotfix()
-    print("\033[1m" + Fore.MAGENTA + "SYSTEM INFORMATION [*]" + Style.RESET_ALL + "\033[0m")
-    print("\n")
     PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMajorVersionNumber,Current_Version,is_admin,is_VM)
-    PrintMicrosoftUpdates(Hotfixes)
+    PrintMicrosoftHotfixes(Hotfixes)
 
-def PrintMicrosoftUpdates(Hotfixes):
+def PrintMicrosoftHotfixes(Hotfixes):
     print("\n")
     print("\033[1m" + Fore.RED + "FOUND UPDATES [*]" + Style.RESET_ALL + "\033[0m")
-    print("\033[1m" + "NON-SECURITY UPDATES [*]" + "\033[0m")
+    print("\n"+"\033[1m" + Fore.RED + "NON-SECURITY UPDATES [*]" + Style.RESET_ALL + "\033[0m")
     for hotfix in Hotfixes:
         if hotfix.Description != "Security Update":
-            print(Fore.CYAN + "HotFixID : " + hotfix.HotFixID + "Description : " + "Installed By : "+ hotfix.InstalledBy + "Installed On : " + hotfix.InstalledOn + Style.RESET_ALL)
-    print("\033[1m" + "SECURITY UPDATES [*]" + "\033[0m")
+            print(Fore.CYAN + "HotFixID:" + hotfix.HotFixID + "," + " Description:" + hotfix.Description +","+ " Installed By:" + hotfix.InstalledBy + "," + " Installed On:" +hotfix.InstalledOn + Style.RESET_ALL)
+    print("\n"+"\033[1m" + Fore.RED + "SECURITY UPDATES [*]" + Style.RESET_ALL + "\033[0m")
     for hotfix in Hotfixes:
         if hotfix.Description == "Security Update":
             print(Fore.CYAN + "HotFixID:" + hotfix.HotFixID + "," + " Description:" + hotfix.Description +","+ " Installed By:" + hotfix.InstalledBy + "," + " Installed On:" +hotfix.InstalledOn + Style.RESET_ALL)
+    print('\n')
 
 def Hotfix():
     HotFixList = []
@@ -143,7 +203,7 @@ def PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMaj
     if is_VM == False:
         print(Fore.CYAN + 'Within A Virtual Machine : ' + Style.RESET_ALL + str(is_VM))
     else:
-        print(Fore.CYAN + 'Process Running As Virtual Machine : ' + Style.RESET_ALL + Fore.RED + str(is_VM) + Style.RESET_ALL) 
+        print(Fore.CYAN + 'Process Running As Virtual Machine : ' + Style.RESET_ALL + Fore.RED + str(is_VM) + Style.RESET_ALL)
  
 def Logging(FilePath):
     pass
