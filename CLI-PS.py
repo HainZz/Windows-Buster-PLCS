@@ -8,6 +8,8 @@ from colorama import Fore,Back,Style
 import platform
 import ctypes
 import win32com.client
+import socket
+
 
 # This Tool was inspired by https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/72cf7d1ff0e5ea5bc36fee4e2bc0f52a2c38378c/winPEAS
 
@@ -15,7 +17,11 @@ def SystemInfo(FilePath):
     PowerShellScript = open(FilePath,'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get information using python methods. 
     PowerShellScript.write("systeminfo | Set-Content -Path .\Results.txt \n") #Write systeminfo to text file for user to use on WES.py
     BasicSystemInformation()
-            
+    GetSettingsPSAudiitWefLaps()
+
+def GetSettingsPSAudiitWefLaps():
+    pass
+
 def BasicSystemInformation():
     with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey: #Get "root" key 
         KeyIndex = 0
@@ -48,7 +54,33 @@ def BasicSystemInformation():
                     break
     is_admin = CheckAdmin()
     is_VM = CheckVM()
+    Hotfixes = Hotfix()
+    print("\033[1m" + Fore.MAGENTA + "SYSTEM INFORMATION [*]" + Style.RESET_ALL + "\033[0m")
+    print("\n")
     PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMajorVersionNumber,Current_Version,is_admin,is_VM)
+    PrintMicrosoftUpdates(Hotfixes)
+
+def PrintMicrosoftUpdates(Hotfixes):
+    print("\n")
+    print("\033[1m" + Fore.RED + "FOUND UPDATES [*]" + Style.RESET_ALL + "\033[0m")
+    print("\033[1m" + "NON-SECURITY UPDATES [*]" + "\033[0m")
+    for hotfix in Hotfixes:
+        if hotfix.Description != "Security Update":
+            print(Fore.CYAN + "HotFixID : " + hotfix.HotFixID + "Description : " + "Installed By : "+ hotfix.InstalledBy + "Installed On : " + hotfix.InstalledOn + Style.RESET_ALL)
+    print("\033[1m" + "SECURITY UPDATES [*]" + "\033[0m")
+    for hotfix in Hotfixes:
+        if hotfix.Description == "Security Update":
+            print(Fore.CYAN + "HotFixID:" + hotfix.HotFixID + "," + " Description:" + hotfix.Description +","+ " Installed By:" + hotfix.InstalledBy + "," + " Installed On:" +hotfix.InstalledOn + Style.RESET_ALL)
+
+def Hotfix():
+    HotFixList = []
+    strComputer = "."
+    objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
+    objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
+    colItems = objSWbemServices.ExecQuery("SELECT * FROM Win32_QuickFixEngineering")
+    for hotfix in colItems:
+        HotFixList.append(hotfix)
+    return HotFixList
 
 ##TODO TEST THIS FUNCTION WITHIN A VM
 ## SOURCE: https://www.activexperts.com/admin/scripts/wmi/python/0383/
@@ -67,7 +99,7 @@ def CheckVM():
         return True
     else: #If any of these statements are true we can be confident that this a the machine is an VM
         return False
-    
+
 def CheckAdmin():
     is_admin = ctypes.windll.shell32.IsUserAnAdmin()
     if is_admin == 0:
@@ -78,6 +110,8 @@ def CheckAdmin():
 
 def PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMajorVersionNumber,Current_Version,is_admin,is_VM): #Simple print function for the basic OS portion of system information
     print("\033[1m" + Fore.RED + "BASIC OS INFORMATION [*]" + Style.RESET_ALL + "\033[0m")
+    print(Fore.CYAN + 'User Name : ' + Style.RESET_ALL + os.environ['USERNAME'])
+    print(Fore.CYAN + 'Computer Name : ' + Style.RESET_ALL + os.environ['COMPUTERNAME'])
     print(Fore.CYAN + 'Processor : ' + Style.RESET_ALL + platform.processor())
     print(Fore.CYAN + 'Architecture : ' + Style.RESET_ALL + platform.architecture()[0])
     print(Fore.CYAN + 'Machine : ' + Style.RESET_ALL + platform.machine())
@@ -94,8 +128,8 @@ def PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMaj
     if is_VM == False:
         print(Fore.CYAN + 'Within A Virtual Machine : ' + Style.RESET_ALL + str(is_VM))
     else:
-        print(Fore.CYAN + 'Process Running As Admin : ' + Style.RESET_ALL + Fore.RED + str(is_VM) + Style.RESET_ALL)
-
+        print(Fore.CYAN + 'Process Running As Virtual Machine : ' + Style.RESET_ALL + Fore.RED + str(is_VM) + Style.RESET_ALL) 
+ 
 def Logging(FilePath):
     pass
 
