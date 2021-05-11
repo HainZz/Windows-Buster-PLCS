@@ -22,6 +22,21 @@ def SystemInfo(FilePath):
 def GetSettingsPSAudiitWefLaps():
     pass
 
+def GetPSSettings():
+    pass
+
+def GetAuditSettings():
+    pass
+
+def GetWefSettings():
+    pass
+
+def GetLapsSettings():
+    pass
+
+def PrintPSAuditWefLapsSettings():
+    pass
+
 def BasicSystemInformation():
     with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey: #Get "root" key 
         KeyIndex = 0
@@ -32,7 +47,7 @@ def BasicSystemInformation():
                     if key_name in ['ProductName','EditionID','ReleaseId','BuildBranch','CurrentMajorVersionNumber','CurrentVersion']: #Check name value matches a key we are looking for
                         if key_name == 'ProductName':
                             Product_Name = winreg.EnumValue(CurrentVersion_key,KeyIndex)[1] 
-                            KeyIndex += 1
+                            KeyIndex += 1 #Increment index to go to the next key
                         elif key_name == 'EditionID':
                             Edition_ID = winreg.EnumValue(CurrentVersion_key,KeyIndex)[1]
                             KeyIndex += 1
