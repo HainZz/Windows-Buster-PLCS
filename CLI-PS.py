@@ -20,7 +20,7 @@ def SystemInfo(FilePath):
     PowerShellScript = open(FilePath,'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get updatermation using python methods. 
     PowerShellScript.write("systemupdate | Set-Content -Path .\Results.txt \n") #Write systemupdate to text file for user to use on WES.py
     BasicSystemInformation()
-    WindowsUpdates()
+   # WindowsUpdates()
     GetSettingsPSAudiitWefLaps()
 
 #Source https://docs.microsoft.com/en-us/windows/win32/api/_wua/
@@ -53,10 +53,9 @@ def printWindowsUpdateList(WindowsUpdateList):
 
 def GetSettingsPSAudiitWefLaps():
     PSSettings = GetPSSettings()
-    AuditSettings = GetAuditSettings()
-    WEFSettings = GetWefSettings()
-    LAPSSettings = GetLapsSettings()
-    PrintPSAuditWefLapsSettings(PSSettings,AuditSettings,WEFSettings,LAPSSettings)
+    GetWefSettings()
+    GetLapsSettings()
+    PrintPSSettings(PSSettings)
 
 #https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#powershell-transcript-files source on what settings are important too look for
 def GetPSSettings():
@@ -72,30 +71,67 @@ def GetPSSettings():
     #http://woshub.com/powershell-commands-history/#:~:text=By%20default%2C%20the%20PowerShell%20in,for%20PowerShell%20and%20PowerShell%20ISE.
     userprofile = os.environ['USERPROFILE']
     path = userprofile + "\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt" #Default location for console_history files
+    PSSettings.append(path)
     Count = 0
     with open(path,'r') as history_file:
         FileLines = history_file.readlines()
-    for Line in FileLines:
+    for Line in FileLines: #Get First 30 Lines of the ConsoleHost_history.txt file Shows Powershell History for attackers
         HistoryLines.append(Line)
         if Count == 30:
             break
+        Count += 1
     PSSettings.append(HistoryLines)
+    PowerShellSettings = {}
+    with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as mkey: #Get Local Machine Powershell Settings Note That This May Be Enabled But Cannot Be Found In Registries etc. Therefore this only checks registries if its enabled
+        try:
+            with winreg.OpenKey(mkey,"Software\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging",0,winreg.KEY_READ) as Check_Script_Logging:
+                MachineScriptBlockSetting = winreg.EnumValue(Check_Script_Logging,0)[1]
+                if MachineScriptBlockSetting == 1:
+                    PowerShellSettings['Machine_Script_Logging'] = True
+                else:
+                    PowerShellSettings['Machine_Script_Logging'] = False
+        except FileNotFoundError:
+            PowerShellSettings['Machine_Script_Logging'] = False
+        try:
+            with winreg.OpenKey(mkey,"Software\\Policies\\Microsoft\\Windows\\PowerShell\\ModuleLogging",0,winreg.KEY_READ) as Check_Module_Logging:
+                MachineModuleLoggingSetting = winreg.EnumValue(Check_Module_Logging,0)[1]
+                if MachineScriptBlockSetting == 1:
+                    PowerShellSettings['Machine_Module_Logging'] = True
+                else:
+                    PowerShellSettings['Machine_Script_Logging'] = False
+        except FileNotFoundError:
+            PowerShellSettings['Machine_Module_Logging'] = False
+        try:
+            with winreg.OpenKey(mkey,"Software\\Policies\\Microsoft\\Windows\\PowerShell\\Transcription",0,winreg.KEY_READ) as Check_Transcription:
+                TranscriptionModuleLoggingSetting = winreg.EnumValue(Check_Transcription,0)[1] #Get Transcript settings i.e output directory whether its enabled / InvocationHeaders
+                if TranscriptionModuleLoggingSetting == 1:
+                    PowerShellSettings['Machine_Transcription_Logging'] = True
+                    InvocationHeaderSetting = winreg.EnumValue(Check_Transcription,1)[1]
+                    PowerShellSettings['Invocation_Header_Setting'] = InvocationHeaderSetting
+                    OutputDirectory = winreg.EnumValue(Check_Transcription,2)[1]
+                    if OutputDirectory != '':
+                        PowerShellSettings['Output_Directory_Setting'] = OutputDirectory
+                    else:
+                        PowerShellSettings['Output_Directory_Setting'] = 'C:\\transcripts'
+                else:
+                    PowerShellSettings['Machine_Transcription_Logging'] = False
+        except FileNotFoundError:
+            PowerShellSettings['Machine_Transcription_Logging'] = False
+    PSSettings.append(PowerShellSettings)
+    FileEntry=[]
+    with os.scandir(PowerShellSettings['Output_Directory_Setting']) as entries:
+        for entry in entries:
+            FileEntry.append(entry.name)
+    PSSettings.append(FileEntry)
     return PSSettings
 
-
-def GetAuditSettings():
-    AuditSettings = []
-    return AuditSettings
-
 def GetWefSettings():
-    WEFSettings = []
-    return WEFSettings
-
+    pass
+    
 def GetLapsSettings():
-    LAPSSettings = []
-    return LAPSSettings
+    pass
 
-def PrintPSAuditWefLapsSettings(PSSettings,AuditSettings,WEFSettings,LAPSSettings):
+def PrintPSSettings(PSSettings):
     pass
 
 def BasicSystemInformation():
