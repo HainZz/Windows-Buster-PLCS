@@ -22,6 +22,153 @@ def SystemInfo(FilePath):
     WindowsUpdates()
     EnviromentVariables()
     GetSettingsPSAudiitWefLaps()
+    GetLSAProtection()
+    CredentialGuard()
+    WDigest()
+    CachedCredentials()
+    InternetSettings()
+
+def InternetSettings():
+    UserInternetSettings = GetUserInternetSettings()
+    MachineInternetSettings = GetMachineInternetSettings()
+    print("\n")
+    print("\033[1m" + Fore.RED + "User Internet Settings [*]" + Style.RESET_ALL + "\033[0m")
+    for user_key in UserInternetSettings:
+        print(user_key + ":" + Fore.CYAN + str(UserInternetSettings[user_key]) + Style.RESET_ALL)
+    print("\n")
+    print("\033[1m" + Fore.RED + "Machine Internet Settings [*]" + Style.RESET_ALL + "\033[0m")
+    for machine_key in MachineInternetSettings:
+        print(machine_key + ":" + Fore.CYAN + str(MachineInternetSettings[machine_key]) + Style.RESET_ALL)
+
+def GetUserInternetSettings():
+    UserSettings = {}
+    Key_Index = 0
+    with winreg.ConnectRegistry(None,winreg.HKEY_CURRENT_USER) as user_key:
+        with winreg.OpenKey(user_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',0,winreg.KEY_READ) as Internet_Key:
+            while True:
+                try:
+                    user_setting = winreg.EnumValue(Internet_Key,Key_Index)
+                    UserSettings[user_setting[0]] = user_setting[1] #Add setting too our settings dict
+                    Key_Index += 1
+                except OSError:
+                    break
+    return UserSettings
+
+def GetMachineInternetSettings():
+    MachineSettings = {}
+    Key_Index = 0
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
+        with winreg.OpenKey(machine_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',0,winreg.KEY_READ) as Internet_Key:
+            while True:
+                try:
+                    machine_setting = winreg.EnumValue(Internet_Key, Key_Index)
+                    MachineSettings[machine_setting[0]] = machine_setting[1]
+                    Key_Index += 1
+                except OSError:
+                    break
+    return MachineSettings
+
+def CachedCredentials():
+    print("\n")
+    print("\033[1m" + Fore.RED + "Number Of Cached Credentials [*]" + Style.RESET_ALL + "\033[0m")
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as key:
+        with winreg.OpenKey(key,'SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon',0,winreg.KEY_READ) as winlogon_key:
+            Check_Cached_Credentials = winreg.EnumValue(winlogon_key,2)[1]
+    print("NoOfCachedCredentials: " + Fore.GREEN + Check_Cached_Credentials + Style.RESET_ALL)
+    
+def WDigest():
+    print("\n")
+    print("\033[1m" + Fore.RED + "WDigest Settings [*]" + Style.RESET_ALL + "\033[0m")
+    WDigestEnabled = 0
+    Key_Index = 0
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as key:
+        with winreg.OpenKey(key,'SYSTEM\\CurrentControlSet\\Control\\SecurityProviders\\WDigest',0,winreg.KEY_READ) as wdigest_key:
+            while True:
+                try:
+                    Check_Key = winreg.EnumValue(wdigest_key,Key_Index)
+                    if Check_Key[0] == "UseLogonCredential":
+                        WDigestEnabled = Check_Key[1]
+                    Key_Index += 1
+                except OSError:
+                    break
+    if WDigestEnabled == 1:
+        print(Fore.RED + "WDigest is active plain-text passwords could be stored in LSASS" + Style.RESET_ALL)
+    else:
+        print(Fore.GREEN + "WDigest is not active")
+
+#https://ldapwiki.com/wiki/LSA%20Protection
+def GetLSAProtection(): #Checks for LSA Protection. If enabled a driver is needed to read LSASSS memory
+    print("\n")
+    print("\033[1m" + Fore.RED + "LSA Protection/Settings [*]" + Style.RESET_ALL + "\033[0m")
+    LSASettings = {}
+    Key_Index = 0
+    LSAEnabled = False
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as hkey:
+        with winreg.OpenKey(hkey,'SYSTEM\\CurrentControlSet\\Control\\LSA',0,winreg.KEY_READ) as LSA_key:
+            while True:
+                try:
+                    Check_LSA_Enabled = winreg.EnumValue(LSA_key,Key_Index)
+                    LSASettings[Check_LSA_Enabled[0]] = Check_LSA_Enabled[1]
+                    if Check_LSA_Enabled[0] == "RunAsPPL":
+                        if Check_LSA_Enabled[1] == 1:
+                            LSAEnabled = True
+                    Key_Index += 1
+                except OSError:
+                    break
+    print("LSAEnabled: " + Fore.CYAN + str(LSAEnabled) + Style.RESET_ALL)
+    print("\n"+Fore.GREEN + "LSASettings: "+ Style.RESET_ALL)
+    for key in LSASettings:
+        print(key + ": " + Fore.CYAN + str(LSASettings[key]) + Style.RESET_ALL)
+
+def CredentialGuard(): #Checks for credential guard if active a driver is needed to read LSASS memory
+    #https://docs.microsoft.com/en-us/windows/security/identity-protection/credential-guard/credential-guard-manage READS Whether Credential Guard / Virtualization-Based-Security enabled
+    print("\n")
+    print("\033[1m" + Fore.RED + "Credential Guard [*]" + Style.RESET_ALL + "\033[0m")
+    Key_Index = 0
+    CredentialGuardEnabled = 0
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as hkey:
+        with winreg.OpenKey(hkey,'SYSTEM\\CurrentControlSet\\Control\\LSA',0,winreg.KEY_READ) as LSA_key:
+            while True:
+                try:
+                    Credential_Guard = winreg.EnumValue(LSA_key,Key_Index)
+                    if Credential_Guard[0] == "LsaCfgFlags":
+                        CredentialGuardEnabled = Credential_Guard[1]
+                    Key_Index += 1
+                except OSError:
+                    break
+    if CredentialGuardEnabled == 0:
+        print(Fore.RED + "CREDENTIAL GUARD DISABLED" + Style.RESET_ALL)
+    elif CredentialGuardEnabled == 1:
+        print(Fore.GREEN + "CREDENTIAL GUARD ENABLED WITH UEFI LOCK" + Style.RESET_ALL)
+    else:
+        print(Fore.GREEN + "CREDENTIAL GUARD ENABLED WITHOUT UEFI LOCK" + Style.RESET_ALL)
+    Key_Index = 0
+    VirtualizationBasedSecurityEnabled = 0
+    PlatformSecurityFeatures = 0
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as mkey:
+        with winreg.OpenKey(mkey,'SYSTEM\\CurrentControlSet\\Control\\DeviceGuard',0,winreg.KEY_READ) as virtual_key:
+            while True:
+                try:
+                    Virtualization_Entry = winreg.EnumValue(virtual_key,Key_Index)
+                    if Virtualization_Entry[0] == "EnableVirtualizationBasedSecurity":
+                        VirtualizationBasedSecurityEnabled = Virtualization_Entry[1]
+                    elif Virtualization_Entry[0] == "RequirePlatformSecurityFeatures":
+                        PlatformSecurityFeatures = Virtualization_Entry[1]
+                    Key_Index += 1
+                except OSError:
+                    break
+    print("\n")
+    print("\033[1m" + Fore.RED + "Virtualization Based Security Settings [*]" + Style.RESET_ALL + "\033[0m")
+    if VirtualizationBasedSecurityEnabled == 1:
+        print(Fore.GREEN + "Virtualization Based Security Enabled" + Style.RESET_ALL)
+    else:
+        print(Fore.RED + "Virtualization Based Security Disabled" + Style.RESET_ALL)
+    if PlatformSecurityFeatures == 1:
+        print(Fore.GREEN + "Platform Security Feature Set Too Secure Boot Only" + Style.RESET_ALL)
+    elif PlatformSecurityFeatures == 3:
+        print(Fore.GREEN + "Platform Security Feature Set Too Secure Boot and DMCA Protection" + Style.RESET_ALL)
+    else: #Catch any values not specified within the documentation this would be in the case of any werid configuration i couldnt find in documentation
+        print(Fore.RED + "Unknown Value / Disabled Platformed Security Features Likely Enabled But Not Running" + Style.RESET_ALL)
 
 #Source https://docs.microsoft.com/en-us/windows/win32/api/_wua/
 #Source https://codereview.stackexchange.com/questions/135648/find-installed-and-available-windows-updates #Heres where i found out about the API downloaded the PDF and managed to figure some stuff out
@@ -156,6 +303,7 @@ def GetPSSettings():
 
 def PrintPSSettings(PSSettings):
     LineCount = 0
+    print("\n")
     print("\033[1m" + Fore.RED + "PowerShell Settings [*]" + Style.RESET_ALL + "\033[0m")
     print("PowerShell v2 Version: "+ Fore.CYAN + PSSettings[0] + Style.RESET_ALL)
     print("PowerShell v5 Version: "+ Fore.CYAN + PSSettings[1] + Style.RESET_ALL)
