@@ -13,14 +13,14 @@ import re
 
 
 # This Tool was inspired by https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/72cf7d1ff0e5ea5bc36fee4e2bc0f52a2c38378c/winPEAS
-
 def SystemInfo(FilePath):
     print("\033[1m" + Fore.MAGENTA + "SYSTEM INFORMATION [*]" + Style.RESET_ALL + "\033[0m")
     print("\n")
     PowerShellScript = open(FilePath,'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get updatermation using python methods. 
     PowerShellScript.write("systemupdate | Set-Content -Path .\Results.txt \n") #Write systemupdate to text file for user to use on WES.py
     BasicSystemInformation()
-   # WindowsUpdates()
+    WindowsUpdates()
+    EnviromentVariables()
     GetSettingsPSAudiitWefLaps()
 
 #Source https://docs.microsoft.com/en-us/windows/win32/api/_wua/
@@ -51,10 +51,34 @@ def printWindowsUpdateList(WindowsUpdateList):
         print("Update Description : "+ Fore.CYAN + update[4] + Style.RESET_ALL)
         print(Fore.GREEN + "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + Style.RESET_ALL)
 
+def EnviromentVariables():
+    SystemEnviromentVariables = {}
+    UserEnvironmentVariables = {}
+    Key_Index = 0
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as hkey:
+        with winreg.OpenKey(hkey,'SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Environment',0,winreg.KEY_READ) as sys_variables:
+            while True: #Loop through till we reach the end of the registry because they can be 1-many system enviroment variables on a computer we must
+                try:
+                    system_variable = winreg.EnumValue(sys_variables,Key_Index)
+                    SystemEnviromentVariables[system_variable[0]] = system_variable[1] #Add the Key-Value pair to the dictionary
+                    Key_Index += 1
+                except OSError:
+                    break
+    for key in os.environ:
+        if key not in SystemEnviromentVariables:
+            value = os.environ[key]
+            UserEnvironmentVariables[key] = value
+    print("\033[1m" + Fore.RED + "ENVIRONMENT VARIABLES [*]" + Style.RESET_ALL + "\033[0m" +"\n")
+    print(Fore.GREEN + "SYSTEM VARIABLES : " + Style.RESET_ALL)
+    for key in SystemEnviromentVariables:
+        print("NAME : " + Fore.CYAN + key + Style.RESET_ALL + " VALUE : " + Fore.CYAN + SystemEnviromentVariables[key] + Style.RESET_ALL)
+    print('\n')
+    print(Fore.GREEN + "USER VARIABLES : " + Style.RESET_ALL)
+    for key in UserEnvironmentVariables:
+        print("NAME : " + Fore.CYAN + key + Style.RESET_ALL + " VALUE : " + Fore.CYAN + UserEnvironmentVariables[key] + Style.RESET_ALL)
+
 def GetSettingsPSAudiitWefLaps():
     PSSettings = GetPSSettings()
-    GetWefSettings()
-    GetLapsSettings()
     PrintPSSettings(PSSettings)
 
 #https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#powershell-transcript-files source on what settings are important too look for
@@ -82,6 +106,7 @@ def GetPSSettings():
         Count += 1
     PSSettings.append(HistoryLines)
     PowerShellSettings = {}
+    #https://adamtheautomator.com/powershell-logging-2/#:~:text=You%20can%20also%20%E2%80%9Cstop%E2%80%9D%20a,folder%20and%20are%20named%20PowerShell_transcript. SOURCE CHECKS ONLY FOR REGISTRIES
     with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as mkey: #Get Local Machine Powershell Settings Note That This May Be Enabled But Cannot Be Found In Registries etc. Therefore this only checks registries if its enabled
         try:
             with winreg.OpenKey(mkey,"Software\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging",0,winreg.KEY_READ) as Check_Script_Logging:
@@ -106,8 +131,6 @@ def GetPSSettings():
                 TranscriptionModuleLoggingSetting = winreg.EnumValue(Check_Transcription,0)[1] #Get Transcript settings i.e output directory whether its enabled / InvocationHeaders
                 if TranscriptionModuleLoggingSetting == 1:
                     PowerShellSettings['Machine_Transcription_Logging'] = True
-                    InvocationHeaderSetting = winreg.EnumValue(Check_Transcription,1)[1]
-                    PowerShellSettings['Invocation_Header_Setting'] = InvocationHeaderSetting
                     OutputDirectory = winreg.EnumValue(Check_Transcription,2)[1]
                     if OutputDirectory != '':
                         PowerShellSettings['Output_Directory_Setting'] = OutputDirectory
@@ -118,21 +141,42 @@ def GetPSSettings():
         except FileNotFoundError:
             PowerShellSettings['Machine_Transcription_Logging'] = False
     PSSettings.append(PowerShellSettings)
-    FileEntry=[]
+    FileEntry={}
     with os.scandir(PowerShellSettings['Output_Directory_Setting']) as entries:
-        for entry in entries:
-            FileEntry.append(entry.name)
+        for entry in entries: #Get Directories in the powershell log file
+            FLine = []
+            FullDir = PowerShellSettings['Output_Directory_Setting'] + "\\" + entry.name
+            with os.scandir(FullDir) as files:
+                for f in files:
+                    FLine.append(f.name)
+                FileEntry[entry.name] = FLine
     PSSettings.append(FileEntry)
     return PSSettings
 
-def GetWefSettings():
-    pass
-    
-def GetLapsSettings():
-    pass
 
 def PrintPSSettings(PSSettings):
-    pass
+    LineCount = 0
+    print("\033[1m" + Fore.RED + "PowerShell Settings [*]" + Style.RESET_ALL + "\033[0m")
+    print("PowerShell v2 Version: "+ Fore.CYAN + PSSettings[0] + Style.RESET_ALL)
+    print("PowerShell v5 Version: "+ Fore.CYAN + PSSettings[1] + Style.RESET_ALL)
+    print("Console History Location (DEFAULT): "+ Fore.CYAN + PSSettings[2] + Style.RESET_ALL)
+    print(Fore.GREEN + "First 30 Lines Of Console History: " + Style.RESET_ALL)
+    print("\n")
+    for line in PSSettings[3]:
+        print("LINE:",LineCount,Fore.CYAN+""+line+Style.RESET_ALL)
+        LineCount += 1
+    print(Fore.GREEN + "Script/Module/Transcription Settings Based of LOCAL MACHINE registry" + Style.RESET_ALL)
+    print("\n")
+    print("Machine_Script_Logging: ",Fore.RED+str(PSSettings[4]['Machine_Script_Logging'])+Style.RESET_ALL) #CHECKS IN LOCAL MACHINE REGISTRY
+    print("Machine_Module_Logging: ",Fore.RED+str(PSSettings[4]['Machine_Module_Logging'])+Style.RESET_ALL)
+    print("Machine_Transcription_Logging: ",Fore.RED+str(PSSettings[4]['Machine_Transcription_Logging'])+Style.RESET_ALL)
+    print("Output_Directory_Transcription: ",Fore.RED+str(PSSettings[4]['Output_Directory_Setting'])+Style.RESET_ALL)
+    print(Fore.GREEN + "Found Files Within Output_Directory [*]  Check These for cool transcripts with stuff in them." + Style.RESET_ALL)
+    for key in PSSettings[5]:
+        print(Fore.GREEN + "Found Files Within Directory " + Style.RESET_ALL + key + ":")
+        for file in PSSettings[5][key]:
+            print("File: "+ Fore.CYAN + file + Style.RESET_ALL)
+
 
 def BasicSystemInformation():
     with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hkey: #Get "root" key 
