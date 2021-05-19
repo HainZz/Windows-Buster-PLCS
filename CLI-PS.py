@@ -27,6 +27,95 @@ def SystemInfo(FilePath):
     WDigest()
     CachedCredentials()
     InternetSettings()
+    EicarAVTesting()
+    DrivesInformation()
+    DefenderConfiguration()
+    UACConfiguration()
+    NTLMSettings()
+    GroupPolicy()
+    AppLockerConfigBypass()
+    Printers()
+    NamedPipes()
+    AsmiProviders()
+    SysMon()
+    NetVersions()
+
+def DrivesInformation():
+    pass
+
+def DefenderConfiguration():
+    pass
+
+def UACConfiguration():
+    pass
+
+def NTLMSettings():
+    pass
+
+def GroupPolicy():
+    pass
+
+def AppLockerConfigBypass():
+    pass
+
+def Printers():
+    pass
+
+def NamedPipes():
+    pass
+
+def AsmiProviders():
+    pass
+
+def SysMon():
+    pass
+
+def NetVersions():
+    pass
+
+def EicarAVTesting():
+    strComputer = "."
+    objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
+    objSWbemServices = objWMIService.ConnectServer(strComputer,"root\SecurityCenter2")
+    colItems = objSWbemServices.ExecQuery("SELECT * FROM AntiVirusProduct")
+    print("\n" + "\033[1m" + Fore.RED + "Anti-Virus Information [*]" + Style.RESET_ALL + "\033[0m")
+    for obj in colItems: #All anti-virus products have these options here we get information about all products on the windows system
+        print("Product Display Name: " + Fore.CYAN + obj.displayName + Style.RESET_ALL)
+        print("Instance GUID: " + Fore.CYAN + obj.instanceGuid + Style.RESET_ALL)
+        print("Path To Signed Prodcut: " + Fore.CYAN + obj.pathToSignedProductExe + Style.RESET_ALL)
+        if obj.displayName == "Windows Defender": #Specific information about windows defender product states all AV's have product states but i cant really put all of them in. 
+            if obj.productState == 393472:
+                print("Product State: " +Fore.CYAN + str(obj.productState) + Style.RESET_ALL + Fore.RED + " Disabled & Up To Date" + Style.RESET_ALL)
+            elif obj.productState == 397584:
+                print("Product State: " +Fore.CYAN + str(obj.productState) + Style.RESET_ALL + Fore.RED + " Enabled & Out Of Date" + Style.RESET_ALL)
+            else:
+                print("Product State: " +Fore.CYAN + str(obj.productState) + Style.RESET_ALL + Fore.GREEN + " Enabled & Out Of Date" + Style.RESET_ALL)
+        print("Product State: " +Fore.CYAN + str(obj.productState) + Style.RESET_ALL)
+        print("\n")
+    spywareObjects = objSWbemServices.ExecQuery("SELECT * FROM AntiSpywareProduct")
+    print("\n" + "\033[1m" + Fore.RED + "Anti-Spyware Information [*]" + Style.RESET_ALL + "\033[0m")
+    for spyware in spywareObjects: 
+        print("Spyware Product Display Name: " + Fore.CYAN + spyware.displayName + Style.RESET_ALL)
+        print("Instance GUID: " + Fore.CYAN + spyware.instanceGuid + Style.RESET_ALL)
+        print("Path To Signed Prodcut: " + Fore.CYAN + spyware.pathToSignedProductExe + Style.RESET_ALL)
+        if spyware.displayName == "Windows Defender": #Specific information about windows defender product states all AV's have product states but i cant really put all of them in. 
+            if spyware.productState == 393472:
+                print("Product State: " +Fore.CYAN + str(spyware.productState) + Style.RESET_ALL + Fore.RED + " Disabled & Up To Date" + Style.RESET_ALL)
+            elif spyware.productState == 397584:
+                print("Product State: " +Fore.CYAN + str(spyware.productState) + Style.RESET_ALL + Fore.RED + " Enabled & Out Of Date" + Style.RESET_ALL)
+            else:
+                print("Product State: " +Fore.CYAN + str(spyware.productState) + Style.RESET_ALL + Fore.GREEN + " Enabled & Out Of Date" + Style.RESET_ALL)
+        print("Product State: " + Fore.CYAN + str(spyware.productState) + Style.RESET_ALL)
+        print("\n")
+    FirewallObjects = objSWbemServices.ExecQuery("SELECT * FROM FirewallProduct")
+    print("\n" + "\033[1m" + Fore.RED + "Firewall Product Information [*]" + Style.RESET_ALL + "\033[0m")
+    for firewall in FirewallObjects:
+        print("Firwall Product Display Name: " + Fore.CYAN + firewall.displayName + Style.RESET_ALL)
+        print("Instance GUID: " + Fore.CYAN + firewall.instanceGuid + Style.RESET_ALL)
+        print("Path To Signed Prodcut: " + Fore.CYAN + firewall.pathToSignedProductExe + Style.RESET_ALL)
+        print("Product State: " + Fore.CYAN + str(firewall.productState) + Style.RESET_ALL)
+        print("\n")
+
 
 def InternetSettings():
     UserInternetSettings = GetUserInternetSettings()
