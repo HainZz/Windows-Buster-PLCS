@@ -5,25 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Windows_Buster_WPF_UI"
         mc:Ignorable="d"
-        Title="Windows-Buster-PLCS" Height="500" Width="500">
+        Title="Windows-Buster-PLCS" Height="750" Width="750">
     <Grid>
         <TabControl>
-            <TabItem Header="Build-PS">
+            <TabItem Header="View-Windows-Information">
+                <TabControl>
+                    <TabItem Header="View-SystemInformation">
+                        <StackPanel>
+                            <WrapPanel>
+                                <Button x:Name="DisplayInformation" Width="250" Height="20" Click="DisplayInformation_Click">Display Information</Button>
+                            </WrapPanel>
+                            <Label FontWeight="Bold">Information Options:</Label>
+                            <CheckBox x:Name="cbSelectAll" Unchecked ="cbSelectAll_Checked" Checked="cbSelectAll_Checked" IsThreeState="True">Select All</CheckBox>
+                            <CheckBox x:Name="cbSystemInformation">Basic System Information</CheckBox>
+                            <CheckBox x:Name="cbMicrosoftUpdates">Enable Microsoft Updates</CheckBox>
+                            <CheckBox x:Name="cbPSSettings">PS Settings</CheckBox>
+                            <CheckBox x:Name="cbLSAProtection">LSA Protection</CheckBox>
+                            <CheckBox x:Name="cbCredentialGuard">Credential Guard</CheckBox>
+                            <CheckBox x:Name="cbWDigest">WDigest</CheckBox>
+                            <CheckBox x:Name="cbCachedCreds">No OF Cached Creds</CheckBox>
+                            <CheckBox x:Name="cbEnviromentVariables">Enviroment Variables</CheckBox>
+                            <CheckBox x:Name="cbInternetSettings">Internet Settings</CheckBox>
+                            <CheckBox x:Name="cbCurrentDrives">Current Drives Information</CheckBox>
+                            <CheckBox x:Name="cbAVInformation">AV Information</CheckBox>
+                            <CheckBox x:Name="cbUACConfiguration">UAC Configuration</CheckBox>
+                            <CheckBox x:Name="cbNTLMSettings">NTLM Settings</CheckBox>
+                            <CheckBox x:Name="cbPrinters">Printers</CheckBox>
+                            <CheckBox x:Name="cbNetVersions">.NET Versions</CheckBox>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="View-UserInformation">
+                        <WrapPanel>
+                        </WrapPanel>
+                    </TabItem>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="Windows Vuln Suggester">
                 <WrapPanel>
-                    <Button x:Name="buildPSButton" Width="164" Height="20" Click="buildPSButton_Click">Build Power Shell</Button>
-                    <Button x:Name="previewPSButton" Width="164" Height="20" Click="previewPSButton_Click">Preview Power Shell</Button>
-                    <Button x:Name="resetPSOptionsButton" Width="166" Height="20" Click="resetPSOptionsButton_Click">Reset Options</Button>
-                    <Label FontWeight="Bold">PS-File-Options:</Label>
                 </WrapPanel>
-        </TabItem>
-        <TabItem Header="Windows Vuln Suggester">
-            <WrapPanel>
-            </WrapPanel>
-        </TabItem>
-        <TabItem Header="PowerShell History">
-            <WrapPanel>
-            </WrapPanel>
-        </TabItem>
+            </TabItem>
+            <TabItem Header="Load Files">
+                <WrapPanel>
+                </WrapPanel>
+            </TabItem>
         </TabControl>
     </Grid>
 </Window>

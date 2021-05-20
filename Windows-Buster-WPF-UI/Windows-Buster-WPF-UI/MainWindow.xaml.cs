@@ -24,19 +24,29 @@ namespace Windows_Buster_WPF_UI
         {
             InitializeComponent();
         }
-
-        private void buildPSButton_Click(object sender, RoutedEventArgs e)
+        private void DisplayInformation_Click(object sender, RoutedEventArgs e)
         {
 
         }
-
-        private void previewPSButton_Click(object sender, RoutedEventArgs e)
+        private void cbSelectAll_Checked(object sender, RoutedEventArgs e)
         {
-
-        }
-
-        private void resetPSOptionsButton_Click(object sender, RoutedEventArgs e)
-        {
+            //If the value of the select all checkbox is true turn all checkboxes to true no matter if they are false or true
+            bool CheckVal = (cbSelectAll.IsChecked == true);
+            cbSystemInformation.IsChecked = CheckVal;
+            cbMicrosoftUpdates.IsChecked = CheckVal;
+            cbPSSettings.IsChecked = CheckVal;
+            cbLSAProtection.IsChecked = CheckVal;
+            cbCredentialGuard.IsChecked = CheckVal;
+            cbWDigest.IsChecked = CheckVal;
+            cbCachedCreds.IsChecked = CheckVal;
+            cbEnviromentVariables.IsChecked = CheckVal;
+            cbInternetSettings.IsChecked = CheckVal;
+            cbCurrentDrives.IsChecked = CheckVal;
+            cbAVInformation.IsChecked = CheckVal;
+            cbUACConfiguration.IsChecked = CheckVal;
+            cbNTLMSettings.IsChecked = CheckVal;
+            cbPrinters.IsChecked = CheckVal;
+            cbNetVersions.IsChecked = CheckVal;
 
         }
     }

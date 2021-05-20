@@ -1,0 +1,412 @@
+BASIC OS INFORMATION [*]
+User Name : jackh
+Computer Name : DESKTOP-8EHGCAV
+Processor : Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+Architecture : 64bit
+Machine : AMD64
+ProductName : Windows 10 Home
+EditionID : Core
+ReleaseID : 2004
+BuildBranch : vb_release
+CurrentMajorVersionNumber : 10
+Current_Version : 6.3
+Process Running As Admin : False
+Within A Virtual Machine : False
+FOUND UPDATES [*]
+NON-SECURITY UPDATES [*]
+HotFixID:KB4601554, Description:Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:5/15/2021
+SECURITY UPDATES [*]
+HotFixID:KB4577266, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:11/7/2020
+HotFixID:KB4580325, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:11/9/2020
+HotFixID:KB4586864, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:11/11/2020
+HotFixID:KB4593175, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:12/11/2020
+HotFixID:KB4598481, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:1/15/2021
+HotFixID:KB5003173, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:5/15/2021
+HotFixID:KB5003242, Description:Security Update, Installed By:NT AUTHORITY\SYSTEM, Installed On:5/14/2021
+WINDOWS UPDATE LIST [*]
+ID:(KB5003173),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-05 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB5003173),Date:2021-05-14 09:31:42+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB4601554),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-05 Cumulative Update for .NET Framework 3.5 and 4.8 for Windows 10 Version 2004 for x64 (KB4601554),Date:2021-05-14 09:23:57+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB890830),Client Application ID:MoUpdateOrchestrator,Full Update Title:Windows Malicious Software Removal Tool x64 - v5.89 (KB890830),Date:2021-05-14 09:23:35+00:00,Update Description:After the download, this tool runs one time to check your computer for infection by specific, prevalent malicious software (including Blaster, Sasser, and Mydoom) and helps remove any infection that is found. If an infection is found, the tool will display a status report the next time that you start your computer. A new version of the tool will be offered every month. If you want to manually run the tool on your computer, you can download a copy from the Microsoft Download Center, or you can run an online version from microsoft.com. This tool is not a replacement for an antivirus product. To help protect your computer, you should use an antivirus product.
+ID:(Version 1.339.615.0),Client Application ID:Microsoft Defender Antivirus (77BDAF73-B396-481F-9042-AD358843EC24),Full Update Title:Security Intelligence Update for Microsoft Defender Antivirus - KB2267602 (Version 1.339.615.0),Date:2021-05-13 18:49:18+00:00,Update Description:Install this update to revise the files that are used to detect viruses, spyware, and other potentially unwanted software. Once you have installed this item, it cannot be removed.
+ID:(KB4023057),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-03 Update for Windows 10 Version 2004 for x64-based Systems (KB4023057),Date:2021-05-01 10:13:53+00:00,Update Description:A security issue has been identified in a Microsoft software product that could affect your system. You can help protect your system by installing this update from Microsoft. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article. After you install this update, you may have to restart your system.
+ID:(KB5001330),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-04 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB5001330),Date:2021-04-15 12:04:36+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB890830),Client Application ID:MoUpdateOrchestrator,Full Update Title:Windows Malicious Software Removal Tool x64 - v5.88 (KB890830),Date:2021-04-15 11:58:19+00:00,Update Description:After the download, this tool runs one time to check your computer for infection by specific, prevalent malicious software (including Blaster, Sasser, and Mydoom) and helps remove any infection that is found. If an infection is found, the tool will display a status report the next time that you start your computer. A new version of the tool will be offered every month. If you want to manually run the tool on your computer, you can download a copy from the Microsoft Download Center, or you can run an online version from microsoft.com. This tool is not a replacement for an antivirus product. To help protect your computer, you should use an antivirus product.
+ID:(KB5000802),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-03 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB5000802),Date:2021-03-13 02:16:43+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB890830),Client Application ID:MoUpdateOrchestrator,Full Update Title:Windows Malicious Software Removal Tool x64 - v5.87 (KB890830),Date:2021-03-12 11:26:19+00:00,Update Description:After the download, this tool runs one time to check your computer for infection by specific, prevalent malicious software (including Blaster, Sasser, and Mydoom) and helps remove any infection that is found. If an infection is found, the tool will display a status report the next time that you start your computer. A new version of the tool will be offered every month. If you want to manually run the tool on your computer, you can download a copy from the Microsoft Download Center, or you can run an online version from microsoft.com. This tool is not a replacement for an antivirus product. To help protect your computer, you should use an antivirus product.
+ID:(KB4023057),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-01 Update for Windows 10 Version 2004 for x64-based Systems (KB4023057),Date:2021-02-23 16:53:44+00:00,Update Description:A security issue has been identified in a Microsoft software product that could affect your system. You can help protect your system by installing this update from Microsoft. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article. After you install this update, you may have to restart your system.
+ID:(KB4601319),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-02 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB4601319),Date:2021-02-12 11:10:30+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB4601050),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-02 Cumulative Update for .NET Framework 3.5 and 4.8 for Windows 10 Version 2004 for x64 (KB4601050),Date:2021-02-12 11:04:53+00:00,Update Description:A security issue has been identified in a Microsoft software product that could affect your system. You can help protect your system by installing this update from Microsoft. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article. After you install this update, you may have to restart your system.
+ID:(KB890830),Client Application ID:MoUpdateOrchestrator,Full Update Title:Windows Malicious Software Removal Tool x64 - v5.86 (KB890830),Date:2021-02-12 11:04:30+00:00,Update Description:After the download, this tool runs one time to check your computer for infection by specific, prevalent malicious software (including Blaster, Sasser, and Mydoom) and helps remove any infection that is found. If an infection is found, the tool will display a status report the next time that you start your computer. A new version of the tool will be offered every month. If you want to manually run the tool on your computer, you can download a copy from the Microsoft Download Center, or you can run an online version from microsoft.com. This tool is not a replacement for an antivirus product. To help protect your computer, you should use an antivirus product.
+ID:(KB4023057),Client Application ID:MoUpdateOrchestrator,Full Update Title:2020-11 Update for Windows 10 Version 2004 for x64-based Systems (KB4023057),Date:2021-01-23 11:46:43+00:00,Update Description:A security issue has been identified in a Microsoft software product that could affect your system. You can help protect your system by installing this update from Microsoft. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article. After you install this update, you may have to restart your system.
+ID:(KB4598242),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-01 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB4598242),Date:2021-01-15 12:47:51+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB4586876),Client Application ID:MoUpdateOrchestrator,Full Update Title:2021-01 Cumulative Update for .NET Framework 3.5 and 4.8 for Windows 10 Version 2004 for x64 (KB4586876),Date:2021-01-15 12:40:38+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB890830),Client Application ID:MoUpdateOrchestrator,Full Update Title:Windows Malicious Software Removal Tool x64 - v5.85 (KB890830),Date:2021-01-15 12:40:07+00:00,Update Description:After the download, this tool runs one time to check your computer for infection by specific, prevalent malicious software (including Blaster, Sasser, and Mydoom) and helps remove any infection that is found. If an infection is found, the tool will display a status report the next time that you start your computer. A new version of the tool will be offered every month. If you want to manually run the tool on your computer, you can download a copy from the Microsoft Download Center, or you can run an online version from microsoft.com. This tool is not a replacement for an antivirus product. To help protect your computer, you should use an antivirus product.
+ID:,Client Application ID:MoUpdateOrchestrator,Full Update Title:Intel - System - 2040.100.0.1029,Date:2020-12-15 13:17:09+00:00,Update Description:Intel System  driver update released in  October 2020
+ID:(KB4592438),Client Application ID:MoUpdateOrchestrator,Full Update Title:2020-12 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB4592438),Date:2020-12-11 12:02:54+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:,Client Application ID:MoUpdateOrchestrator,Full Update Title:Apple, Inc. - USBDevice - 486.0.0.0,Date:2020-11-22 23:32:07+00:00,Update Description:Apple, Inc. USBDevice  driver update released in  October 2020
+ID:,Client Application ID:MoUpdateOrchestrator,Full Update Title:Razer Inc - HIDClass - 6.2.9200.16485,Date:2020-11-21 10:57:45+00:00,Update Description:Razer Inc HIDClass  driver update released in  January 2017
+ID:,Client Application ID:MoUpdateOrchestrator,Full Update Title:Razer Inc - HIDClass - 6.2.9200.16485,Date:2020-11-21 00:10:03+00:00,Update Description:Razer Inc HIDClass  driver update released in  January 2017
+ID:(KB890830),Client Application ID:MoUpdateOrchestrator,Full Update Title:Windows Malicious Software Removal Tool x64 - v5.84 (KB890830),Date:2020-11-13 17:25:13+00:00,Update Description:After the download, this tool runs one time to check your computer for infection by specific, prevalent malicious software (including Blaster, Sasser, and Mydoom) and helps remove any infection that is found. If an infection is found, the tool will display a status report the next time that you start your computer. A new version of the tool will be offered every month. If you want to manually run the tool on your computer, you can download a copy from the Microsoft Download Center, or you can run an online version from microsoft.com. This tool is not a replacement for an antivirus product. To help protect your computer, you should use an antivirus product.
+ID:,Client Application ID:Acquisition;DSIC,Full Update Title:9PLFNLNT3G5G-AppUp.IntelGraphicsExperience,Date:2020-11-13 16:48:01+00:00,Update Description:9PLFNLNT3G5G-1152921505692414649
+ID:,Client Application ID:Device Driver Retrieval Client,Full Update Title:Intel Corporation - Display - 27.20.100.8681,Date:2020-11-13 16:47:42+00:00,Update Description:Intel Corporation Display  driver update released in  September 2020
+ID:(KB4586781),Client Application ID:MoUpdateOrchestrator,Full Update Title:2020-11 Cumulative Update for Windows 10 Version 2004 for x64-based Systems (KB4586781),Date:2020-11-11 12:38:43+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB4580419),Client Application ID:MoUpdateOrchestrator,Full Update Title:2020-11 Cumulative Update for .NET Framework 3.5 and 4.8 for Windows 10 Version 2004 for x64 (KB4580419),Date:2020-11-11 12:34:00+00:00,Update Description:Install this update to resolve issues in Windows. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article for more information. After you install this item, you may have to restart your computer.
+ID:(KB4580325),Client Application ID:MoUpdateOrchestrator,Full Update Title:2020-10 Security Update for Adobe Flash Player for Windows 10 Version 2004 for x64-based Systems (KB4580325),Date:2020-11-09 12:54:23+00:00,Update Description:A security issue has been identified in a Microsoft software product that could affect your system. You can help protect your system by installing this update from Microsoft. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article. After you install this update, you may have to restart your system.
+ID:(KB4578968),Client Application ID:MoUpdateOrchestrator,Full Update Title:2020-10 Cumulative Update for .NET Framework 3.5 and 4.8 for Windows 10 Version 2004 for x64 (KB4578968),Date:2020-11-09 12:54:20+00:00,Update Description:A security issue has been identified in a Microsoft software product that could affect your system. You can help protect your system by installing this update from Microsoft. For a complete listing of the issues that are included in this update, see the associated Microsoft Knowledge Base article. After you install this update, you may have to restart your system.
+ID:,Client Application ID:UpdateOrchestrator,Full Update Title:Feature update to Windows 10, version 2004,Date:2020-11-08 00:49:27+00:00,Update Description:Install the latest update for Windows 10: Windows 10, version 2004.
+ENVIRONMENT VARIABLES [*]
+SYSTEM VARIABLES : 
+NAME : ComSpecVALUE : %SystemRoot%\system32\cmd.exe
+NAME : DriverDataVALUE : C:\Windows\System32\Drivers\DriverData
+NAME : NUMBER_OF_PROCESSORSVALUE : 12
+NAME : OSVALUE : Windows_NT
+NAME : PathVALUE : C:\Python39\Scripts\;C:\Python39\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\jackh\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Smart Projects\IsoBuster;%SystemRoot%\system32;%SystemRoot%;%SystemRoot%\System32\Wbem;%SYSTEMROOT%\System32\WindowsPowerShell\v1.0\;%SYSTEMROOT%\System32\OpenSSH\;D:\jdk-11.0.10\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet\
+NAME : PATHEXTVALUE : .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW
+NAME : PROCESSOR_ARCHITECTUREVALUE : AMD64
+NAME : PROCESSOR_IDENTIFIERVALUE : Intel64 Family 6 Model 158 Stepping 10, GenuineIntel
+NAME : PROCESSOR_LEVELVALUE : 6
+NAME : PROCESSOR_REVISIONVALUE : 9e0a
+NAME : PSModulePathVALUE : %ProgramFiles%\WindowsPowerShell\Modules;%SystemRoot%\system32\WindowsPowerShell\v1.0\Modules
+NAME : TEMPVALUE : %SystemRoot%\TEMP
+NAME : TMPVALUE : %SystemRoot%\TEMP
+NAME : USERNAMEVALUE : SYSTEM
+NAME : VBOX_MSI_INSTALL_PATHVALUE : C:\Program Files\Oracle\VirtualBox\
+NAME : windirVALUE : %SystemRoot%
+NAME : ZES_ENABLE_SYSMANVALUE : 1
+USER VARIABLES : 
+NAME : ALLUSERSPROFILEVALUE : C:\ProgramData
+NAME : APPDATAVALUE : C:\Users\jackh\AppData\Roaming
+NAME : CHROME_CRASHPAD_PIPE_NAMEVALUE : \\.\pipe\crashpad_28620_MLCJVIZBFXUCVXVA
+NAME : COMMONPROGRAMFILESVALUE : C:\Program Files\Common Files
+NAME : COMMONPROGRAMFILES(X86)VALUE : C:\Program Files (x86)\Common Files
+NAME : COMMONPROGRAMW6432VALUE : C:\Program Files\Common Files
+NAME : COMPUTERNAMEVALUE : DESKTOP-8EHGCAV
+NAME : COMSPECVALUE : C:\WINDOWS\system32\cmd.exe
+NAME : DRIVERDATAVALUE : C:\Windows\System32\Drivers\DriverData
+NAME : FPS_BROWSER_APP_PROFILE_STRINGVALUE : Internet Explorer
+NAME : FPS_BROWSER_USER_PROFILE_STRINGVALUE : Default
+NAME : HOMEDRIVEVALUE : C:
+NAME : HOMEPATHVALUE : \Users\jackh
+NAME : LOCALAPPDATAVALUE : C:\Users\jackh\AppData\Local
+NAME : LOGONSERVERVALUE : \\DESKTOP-8EHGCAV
+NAME : ONEDRIVEVALUE : C:\Users\jackh\OneDrive
+NAME : ORIGINAL_XDG_CURRENT_DESKTOPVALUE : undefined
+NAME : PATHVALUE : C:\Users\jackh\.virtualenvs\Windows-Buster-PLCS-VCkH7C2b/Scripts;C:\Python39\Scripts\;C:\Python39\;C:\Program Files (x86)\VMware\VMware Workstation\bin\;C:\Program Files (x86)\Razer\ChromaBroadcast\bin;C:\Program Files\Razer\ChromaBroadcast\bin;C:\Program Files (x86)\Razer Chroma SDK\bin;C:\Program Files\Razer Chroma SDK\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\system32\config\systemprofile\AppData\Local\Microsoft\WindowsApps;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Users\jackh\AppData\Local\Microsoft\WindowsApps;C:\Program Files (x86)\Smart Projects\IsoBuster;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;D:\jdk-11.0.10\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Users\jackh\AppData\Local\Microsoft\WindowsApps;;C:\Users\jackh\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\jackh\.dotnet\tools
+NAME : POWERSHELL_DISTRIBUTION_CHANNELVALUE : PSES
+NAME : PROGRAMDATAVALUE : C:\ProgramData
+NAME : PROGRAMFILESVALUE : C:\Program Files
+NAME : PROGRAMFILES(X86)VALUE : C:\Program Files (x86)
+NAME : PROGRAMW6432VALUE : C:\Program Files
+NAME : PSEXECUTIONPOLICYPREFERENCEVALUE : Bypass
+NAME : PSMODULEPATHVALUE : C:\Users\jackh\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules;c:\Users\jackh\.vscode\extensions\ms-vscode.powershell-2021.2.2\modules
+NAME : PUBLICVALUE : C:\Users\Public
+NAME : SESSIONNAMEVALUE : Console
+NAME : SYSTEMDRIVEVALUE : C:
+NAME : SYSTEMROOTVALUE : C:\WINDOWS
+NAME : USERDOMAINVALUE : DESKTOP-8EHGCAV
+NAME : USERDOMAIN_ROAMINGPROFILEVALUE : DESKTOP-8EHGCAV
+NAME : USERPROFILEVALUE : C:\Users\jackh
+NAME : VIRTUAL_ENVVALUE : C:\Users\jackh\.virtualenvs\Windows-Buster-PLCS-VCkH7C2b
+NAME : WINDIRVALUE : C:\WINDOWS
+NAME : TERM_PROGRAMVALUE : vscode
+NAME : TERM_PROGRAM_VERSIONVALUE : 1.56.2
+NAME : LANGVALUE : en_GB.UTF-8
+NAME : COLORTERMVALUE : truecolor
+NAME : VSCODE_GIT_IPC_HANDLEVALUE : \\.\pipe\vscode-git-26705afc5b-sock
+NAME : GIT_ASKPASSVALUE : c:\Users\jackh\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass.sh
+NAME : VSCODE_GIT_ASKPASS_NODEVALUE : C:\Users\jackh\AppData\Local\Programs\Microsoft VS Code\Code.exe
+NAME : VSCODE_GIT_ASKPASS_MAINVALUE : c:\Users\jackh\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\askpass-main.js
+POWERSHELL SETTINGS [*]
+PowerShell v2 Version: 2.0
+PowerShell v5 Version: 5.1.19041.1
+Console History Location (DEFAULT): C:\Users\jackh\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+First 30 Lines Of Console History: LINE:systeminfo
+LINE:prcodump.exe -accepteula -ma <proc_name_tasklist>
+LINE:Tasklist /SVC
+LINE:for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v "system32"^|find ":"') do (`
+LINE:    for /f eol^=^"^ delims^=^" %%z in ('echo %%x') do (`
+LINE:        icacls "%%z" 2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users todos %username%" && echo.`
+LINE:    )`
+LINE:)
+LINE:for /f "tokens=2 delims='='" %%x in ('wmic process list full^|find /i "executablepath"^|find /i /v "system32"^|find ":"') do for /f eol^=^"^ delims^=^" %%y in ('echo %%x') do (`
+LINE:    icacls "%%~dpy\" 2>nul | findstr /i "(F) (M) (W) :\\" | findstr /i ":\\ everyone authenticated users todos %username%" && echo.`
+LINE:)
+LINE:Get-Process | where {$_.ProcessName -notlike "svchost*"} | ft ProcessName, Id`
+LINE:
+LINE:Get-WmiObject -Query "Select * from Win32_Process" | where {$_.Name -notlike "svchost*"} | Select Name, Handle, @{Label="Owner";Expression={$_.GetOwner().User}} | ft -AutoSize`
+LINE:#
+LINE:Get-WmiObject -Query "Select * from Win32_Process" | where {$_.Name -notlike "svchost*"} | Select Name, Handle, @{Label="Owner";Expression={$_.GetOwner().User}} | ft -AutoSize`
+LINE:
+LINE:tasklist /v /fi "username eq system" #Filter "system" processes`
+LINE:
+LINE:q
+LINE:tasklist /v /fi "username eq system" #Filter "system" processes`
+LINE:
+LINE:procdump -e -ma -w Blit
+LINE:procdump -e -ma -w Blitz
+LINE:procdump.exe
+LINE:net start
+LINE:wmic service list brief
+LINE:sc query 
+LINE:Get-Service
+LINE:sc qc Bitdefender Virus Shield
+LINE:sc qc WalletService
+SCRIPT/MODULE/TRANSCRIPTION SETTINGS BASED OF LOCAL MACHINE REGISTRY [*]
+Machine_Script_Logging:True
+Machine_Module_Logging:True
+Machine_Transcription_LoggingTrue
+Output_Directory_TranscriptionC:\temp_transcripts
+Found Files Within Output_Directory [*] Check These for cool transcripts with stuff in them.
+Found Files Within Directory 20210513:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.7TzORJyV.20210513134715.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.a1ALsN_c.20210513142408.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.BPk1MYIR.20210513111931.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.bV4l4x4e.20210513194002.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.c7QnwqpD.20210513112317.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.CGFKbZHE.20210513112014.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ddoXMIWM.20210513170916.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Eby0xJ5x.20210513141710.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.GnYBASKd.20210513142540.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.HX1P_VtS.20210513193621.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.i8q8aXVO.20210513112142.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.jgwweEZ0.20210513112321.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.M+gjgX7z.20210513194028.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.NEybLUKF.20210513194021.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.NP2DZGCJ.20210513135546.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.qMOvkgaI.20210513135426.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.qrlfkgoi.20210513194010.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ryc6RoQE.20210513142422.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.s1mcjlGl.20210513193623.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.wfKh8D6O.20210513142410.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ztOpOvqr.20210513193753.txt
+Found Files Within Directory 20210514:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ajRy5fTT.20210514101932.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Q0U3eY0s.20210514113638.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.UTounAiJ.20210514111049.txt
+Found Files Within Directory 20210515:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Pcpu803E.20210515100523.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.shf1rpUq.20210515180538.txt
+Found Files Within Directory 20210516:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.vP9qwawc.20210516091354.txt
+Found Files Within Directory 20210517:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ULRiM0Ng.20210517092822.txt
+Found Files Within Directory 20210518:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.bAeOoX8x.20210518154416.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.JVF7jEjv.20210518114247.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.S7+AyEYW.20210518114053.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.vMX0Uh1u.20210518114559.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.YD5iwpbP.20210518144250.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.yiJMVEeY.20210518115203.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Z61D9Ig3.20210518194252.txt
+Found Files Within Directory 20210519:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.+Sbm5z6J.20210519152114.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.1TrP4buD.20210519212555.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.3dkxTC87.20210519155510.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.anNs_UQj.20210519103140.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.aRsujH73.20210519151046.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.BCyxSsRH.20210519125405.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.bwgZMjB5.20210519151049.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.c9fh7G_W.20210519134451.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.CIRHwA0G.20210519102254.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.cJSLfwZM.20210519103045.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ckYoRluz.20210519102148.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.f2FX05uC.20210519175418.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.f7Q2imom.20210519125211.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.GYOcbDe4.20210519125337.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.krPf5vBe.20210519152134.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.LxC2PqxP.20210519103059.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.MD_FkBQT.20210519163354.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.MMhoT4ap.20210519163345.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.oHqW9fAz.20210519163357.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.pg2JqxAR.20210519163338.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Qb3QsL1h.20210519103105.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.qHaBqpi0.20210519102503.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.S55F7vyo.20210519203618.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.vANp8ikq.20210519203624.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.YXQymJib.20210519103132.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Z+UvnaCO.20210519152137.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.z_0Aypt6.20210519152116.txt
+Found Files Within Directory 20210520:
+File: PowerShell_transcript.DESKTOP-8EHGCAV.0ceYYnQ6.20210520163408.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.0oa9WKR1.20210520190839.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.2OXUJ27B.20210520173600.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.3UZ62bY+.20210520194911.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.3XOK+Ywm.20210520184306.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.40E2HmG_.20210520173815.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.4OEV9ZrD.20210520163611.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.7THpYC8I.20210520102741.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.a5oqZsH1.20210520175245.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.aE+kRnlj.20210520180927.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.AHw+AV4C.20210520195141.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.B9_9fUG+.20210520151055.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.bhMx6NWB.20210520164717.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.cdM7YCe7.20210520164439.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.chJZS2M8.20210520151603.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ENkU_QTS.20210520163020.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.epQuLTkh.20210520181042.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ErxzHFaG.20210520210419.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.fn7Q7Jcs.20210520170226.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.fo8fn5iy.20210520151357.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.GJTGEgME.20210520181327.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.h6ygvKey.20210520190911.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.H9SWrBAT.20210520174201.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.HMO1k3si.20210520185637.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.IkaslJkg.20210520151220.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.IugYme52.20210520182120.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.J08+uptj.20210520210833.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Kbw9uJ_7.20210520185830.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.kZ9r4683.20210520183233.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.L1XnExOk.20210520190204.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.lc3t21wC.20210520133710.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.LnZt21hx.20210520173511.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.MAZL6rse.20210520210349.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.mXDT8yA6.20210520201347.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.n2qN17QF.20210520192316.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.NlPfV5Dp.20210520175348.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.NNbLnI1x.20210520210132.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.oPNqJQb_.20210520162131.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ospevqIG.20210520151902.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.osrpxQJI.20210520151154.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.p+gx0ATW.20210520200417.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.PvvkqXyc.20210520185648.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.PwEuT0wY.20210520195458.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.pYTtQJUZ.20210520190354.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.QgxqOaUH.20210520210914.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.QruF7uDb.20210520163703.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.r9vR69U6.20210520170129.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.s5CJLEsE.20210520200406.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.SqxTPU9n.20210520151320.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.tJzOT+YP.20210520191316.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.tkxybdfI.20210520163036.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Trra13eZ.20210520192222.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.twv5wB2a.20210520173408.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.uJ98h90X.20210520143657.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.UXZB33A7.20210520181255.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.vQPfqEkp.20210520182029.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.XK+zz0Pu.20210520210438.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.xOZqyU7q.20210520192548.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Xt6te5kH.20210520181827.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.xuhOAO4d.20210520183908.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.ybNHJFqi.20210520171754.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.YhAzPWLV.20210520151209.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.YnZUuetE.20210520145706.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.yS0etdpw.20210520151233.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV.Zw3Q2+mF.20210520143428.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV._6LfmpB7.20210520173538.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV._bgg3NUF.20210520181907.txt
+File: PowerShell_transcript.DESKTOP-8EHGCAV._M1kf7tY.20210520190334.txt
+Found Files Within Directory testdir:
+File: Test.txt
+LSA PROTECTION/SETTINGS [*]
+LSAEnabled: True
+LSASettings: 
+auditbasedirectories:0
+auditbaseobjects:0
+Bounds:b'\x000\x00\x00\x00 \x00\x00'
+crashonauditfail:0
+fullprivilegeauditing:b'\x00'
+LimitBlankPasswordUse:1
+NoLmHash:1
+Security Packages:['""']
+Notification Packages:['scecli']
+Authentication Packages:['msv1_0']
+disabledomaincreds:0
+everyoneincludesanonymous:0
+forceguest:0
+LsaPid:908
+ProductType:3
+restrictanonymous:0
+restrictanonymoussam:1
+SamConnectedAccountsExist:1
+SecureBoot:1
+RunAsPPL:1
+LsaCfgFlags:1
+CREDENTIAL GUARD [*]
+CREDENTIAL GUARD ENABLED WITH UEFI LOCK
+VIRTUALIZATION BASED SECURITY SETTINGS [*]
+Virtualization Based Security Enabled
+Platform Security Feature Set Too Secure Boot Only
+WDIGEST SETTINGS [*]
+WDigest is not active
+NUMBER OF CACHED CREDENTIALS [*]
+NoOfCachedCredentials:10
+USER INTERNET SETTINGS [*]
+CertificateRevocation:1
+DisableCachingOfSSLPages:0
+IE5_UA_Backup_Flag:5.0
+PrivacyAdvanced:1
+SecureProtocols:2688
+EnableNegotiate:1
+MigrateProxy:1
+ProxyEnable:0
+User Agent:Mozilla/4.0 (compatible; MSIE 8.0; Win32)
+ZonesSecurityUpgrade:b'\xdd\xa8\xd7\r\x13\xb5\xd6\x01'
+WarnonZoneCrossing:0
+LockDatabase:132493071406735393
+MACHINE INTERNET SETTINGS [*]
+ActiveXCache:C:\Windows\Downloaded Program Files
+CodeBaseSearchPath:CODEBASE
+EnablePunycode:1
+MinorVersion:0
+WarnOnIntranet:1
+ANTI-VIRUS INFORMATION [*]
+Product Display Name:Windows Defender
+Instance GUID: {D68DDC3A-831F-4fae-9E44-DA132C1ACF46}
+Path To Signed Product: windowsdefender://
+Product State: 393472 Disabled & Up To Date
+Product Display Name:Bitdefender Antivirus
+Instance GUID: {0E17DB7D-A20F-62CE-B95B-17DB0CDFE318}
+Path To Signed Product: C:\Program Files\Bitdefender\Bitdefender Security\wscfix.exe
+Product State: 270336
+ANTI-SPYWARE INFORMATION [*]
+Spyware Product Display Name: Windows Defender
+Instance GUID: {D68DDC3A-831F-4fae-9E44-DA132C1ACF46}
+Path To Signed Product: windowsdefender://
+Product State: 393472 Disabled & Up To Date
+Spyware Product Display Name: Bitdefender Antispyware
+Instance GUID: {B5763A99-8435-6D40-83EB-2CA97758A9A5}
+Path To Signed Product: C:\Program Files\Bitdefender\Bitdefender Security\wscfix.exe
+Product State: 266240
+FIREWALL PRODUCT INFORMATION [*]
+Firewall Product Display Name: Bitdefender Firewall
+Instance GUID: {362C5A58-E860-6396-9204-BEEEF20CA463}
+Path To Signed Product: C:\Program Files\Bitdefender\Bitdefender Security\wscfix.exe
+Product State: 262144
+DRIVES INFORMATION [*]
+Caption:C:\Type:Avaliable Space:102.9 GBFile System:NTFSFile Permissions:drwxrwxrwx
+Caption:D:\Type:TOSHIBA EXTAvaliable Space:790.0 GBFile System:exFATFile Permissions:drwxrwxrwx
+Caption:E:\Type:Avaliable Space:502.8 MBFile System:FAT32File Permissions:drwxrwxrwx
+UAC CONFIGURATION [*]
+ConsentPromptBehaviorAdmin: Prompt For Non Windows Binaries
+ConsentPromptBehaviorUser: Prompt For Creds Not On Secure Desktop
+LUA Enabled
+LocalAccountTokenFilterPolicy: None
+FilterAdministratorToken: None
+ENUMERATING NTLM SETTINGS [*]
+LanManCompatibilityLevel: Send NTLMv2 response only
+ClientRequireSigning: False
+ClientNegotiateSigning: True
+ServerRequireSigning: False
+ServerNegotiateSigning: False
+LDAPSigning : Negotiate signing/sealing
+NTLMinClientSec: 536870912 Description: 128-bit encryption. If the value of either this entry or the NtlmMinClientSec entry is 0x20000000, then the connection will fail unless 128-bit encryption is negotiated
+NTLMinServerSec: 536870912 Description: 128-bit encryption. If the value of either this entry or the NtlmMinClientSec entry is 0x20000000, then the connection will fail unless 128-bit encryption is negotiated
+InboundRestrictions: None
+OutboundRestrictions: None
+InboundAuditing: None
+OutboundExceptions: None
+PRINTER INFORMATION [*]
+Printer: OneNote for Windows 10 Printer Status: Unknown Network: False Default: False
+Printer: OneNote (Desktop) Printer Status: Unknown Network: False Default: False
+Printer: Microsoft XPS Document Writer Printer Status: Unknown Network: False Default: False
+Printer: Microsoft Print to PDF Printer Status: Unknown Network: False Default: False
+Printer: HP Officejet 7500 E910 (Network) Printer Status: Unknown Network: False Default: True
+Printer: Fax - HP Officejet 7500 E910 (Network) Printer Status: Unknown Network: False Default: False
+Printer: Fax Printer Status: Unknown Network: False Default: False
+CLR & .NET VERSIONS [*]
+CLR Versions Found:
+CLR Version: v2.0.50727
+CLR Version: v4.0.30319
+.NET Versions:
+.NET Version: 3.5.30729.4926
+.NET Version: 4.8.04084
