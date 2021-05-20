@@ -10,7 +10,11 @@ import ctypes
 import win32com.client
 import socket
 import re
-
+import wmi
+import math
+import win32api
+import stat
+import cups
 
 # This Tool was inspired by https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/72cf7d1ff0e5ea5bc36fee4e2bc0f52a2c38378c/winPEAS
 def SystemInfo(FilePath):
@@ -40,17 +44,205 @@ def SystemInfo(FilePath):
     SysMon()
     NetVersions()
 
+
+##SOURCE: http://timgolden.me.uk/python/wmi/cookbook.html
 def DrivesInformation():
-    pass
+    c = wmi.WMI()
+    print("\n" + "\033[1m" + Fore.RED + "Drives Information [*]" + Style.RESET_ALL + "\033[0m")
+    DRIVE_TYPES = {0:"Unknown",1:"No Root Directory",2:"Removable Disk",3:"Local Disk",4:"Network Drive",5:"Compact Disc",6:"RAM Disk"}
+    for drive in c.Win32_LogicalDisk():
+        SpaceConversion = ByteConversion(drive.FreeSpace)
+        caption = drive.Caption + "\\"
+        File_Mode = os.stat(caption).st_mode
+        Unix_Permissions = stat.filemode(File_Mode) #This gets unix like permissions on each of our drives using os.stat and stat modules
+        InformationObject = win32api.GetVolumeInformation(caption)
+        VolumeLabel = InformationObject[0]
+        FileSystem = InformationObject[4]
+        print('Caption: ' + Fore.CYAN + caption + " " + Style.RESET_ALL +
+        'Type: ' + Fore.CYAN + DRIVE_TYPES[drive.DriveType] + " " + Style.RESET_ALL
+        + 'Volume Label: ' + Fore.CYAN + VolumeLabel + Style.RESET_ALL + " " +
+        'Avaliable Space: ' + Fore.CYAN + SpaceConversion + Style.RESET_ALL + " " +
+        'File System: ' + Fore.CYAN + FileSystem + Style.RESET_ALL + " " +
+        'File Permissions: ' + Fore.CYAN + Unix_Permissions + Style.RESET_ALL)
+
+##SOURCE: https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
+def ByteConversion(Bytes):
+    Bytes = int(Bytes)
+    suffixes=["B","KB","MB","GB","TB"]
+    suffixIndex = 0
+    while Bytes > 1024 and suffixIndex < 4:
+        suffixIndex += 1
+        Bytes = Bytes/1024.0
+    factor = 10 
+    RoundedBytes = math.floor(Bytes * factor) / factor
+    ConcatBytes = str(RoundedBytes) +" "+suffixes[suffixIndex]
+    return ConcatBytes
 
 def DefenderConfiguration():
     pass
 
+##SOURCE : https://book.hacktricks.xyz/windows/authentication-credentials-uac-and-efs
 def UACConfiguration():
-    pass
+    UAC_Options = {0:"No Prompting",1:"Prompt On Secure Desktop",2:"Prompt Permit Deny On Secure Desktop",3:"Prompt For Creds Not On Secure Desktop",
+    4:"Prompt For Permit Deny Not On Secure Desktop",5:"Prompt For Non Windows Binaries"}
+    Key_Index = 0
+    Consent_Prompt_Admin = None
+    Consent_Prompt_User = None
+    LUA_Enabled = None
+    LocalAccountToken = None
+    AdminsitratorToken = None
+    print("\n" + "\033[1m" + Fore.RED + "UAC Configuration [*]" + Style.RESET_ALL + "\033[0m")
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
+        with winreg.OpenKey(machine_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System',0,winreg.KEY_READ) as UAC_key:
+            while True:
+                try:
+                    KeyValue = winreg.EnumValue(UAC_key,Key_Index)
+                    if KeyValue[0] == 'ConsentPromptBehaviorAdmin':
+                        Consent_Prompt_Admin = KeyValue[1]
+                    elif KeyValue[0] == 'ConsentPromptBehaviorUser':
+                        Consent_Prompt_User = KeyValue[1]
+                    elif KeyValue[0] == 'EnableLUA':
+                        LUA_Enabled = KeyValue[1]
+                    elif KeyValue[0] == 'LocalAccountTokenFilterPolicy':
+                        LocalAccountToken = KeyValue[1]
+                    elif KeyValue[0] == 'FilterAdministratorToken':
+                        AdminsitratorToken = KeyValue[1]
+                    Key_Index += 1
+                except OSError:
+                    break
+    print("ConsentPromptBehaviorAdmin: " + Fore.CYAN + UAC_Options[Consent_Prompt_Admin] + Style.RESET_ALL)
+    print("ConsentPromptBehaviorUser: " + Fore.CYAN + UAC_Options[Consent_Prompt_User] + Style.RESET_ALL)
+    if LUA_Enabled == 1:
+        print(Fore.GREEN + "LUA Enabled" + Style.RESET_ALL)
+    else:
+        print(Fore.RED + "LUA Disabled" + Style.RESET_ALL)
+    if LocalAccountToken == 1:
+        print(Fore.GREEN + "builds an elevated token" + Style.RESET_ALL)
+    elif LocalAccountToken == 0:
+        print(Fore.RED + "Builds an filtered token + the administrator credentials are removed" + Style.RESET_ALL)
+    else:
+        print("LocalAccountTokenFilterPolicy: " + Fore.CYAN + str(LocalAccountToken) + Style.RESET_ALL)
+    if AdminsitratorToken == 1:
+        print(Fore.GREEN + "Only the built-in adminstrator account (RID 500) is placed into admin approval mode/ Approval is required when performing admin tasks" + Style.RESET_ALL)
+    elif AdminsitratorToken == 0:
+        print(Fore.RED + "Only the built-in adminstrator account SHOULD be placed into full token mode" + Style.RESET_ALL)
+    else:
+        print("FilterAdministratorToken: " + Fore.CYAN + str(AdminsitratorToken) + Style.RESET_ALL)
 
+#https://docs.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-security-lan-manager-authentication-level
+#https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/blob/f76c41f3c981382fdd21093e8f4498f6c41d92fd/winPEAS/winPEASexe/winPEAS/Info/SystemInfo/Ntlm/Ntlm.cs#L7
+#https://blog.joeware.net/2018/07/07/5842/
+#https://www.ultimatewindowssecurity.com/wiki/page.aspx?spid=NSrpcservers
 def NTLMSettings():
-    pass
+    CompatibilityDict = {0:"Send LM & NTLM Responses",1:"Send LM & NTLM - use NTLMv2 session security if negotiated",2:"Send NTLM response only",3:"Send NTLMv2 response only",4:"Send NTLMv2 response only.Refuse LM",5:"Send NTLMv2 response only. Refuse LM & NTLM"}
+    print("\n" + "\033[1m" + Fore.RED + "Enumerating NTLM Settings [*]" + Style.RESET_ALL + "\033[0m")
+    Key_Index = 0
+    LmCompatibilityLevel = None
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
+        with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Control\\Lsa',0,winreg.KEY_READ) as CompatibilityLevelReg:
+            while True:
+                try:
+                    LSA_Value = winreg.EnumValue(CompatibilityLevelReg, Key_Index)
+                    if LSA_Value[0] == "LmCompatibilityLevel":
+                        LmCompatibilityLevel = LSA_Value[1]
+                        Key_Index += 1
+                    Key_Index += 1
+                except OSError:
+                    break
+        if LmCompatibilityLevel == None:
+            print("LanManCompatibilityLevel: " + Fore.CYAN + CompatibilityDict[3] + Style.RESET_ALL)
+        else:
+            print("LanManCompatibilityLevel: " + Fore.CYAN + CompatibilityDict[LmCompatibilityLevel] + Style.RESET_ALL)
+        with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters',0,winreg.KEY_READ) as LanManWorkStation:
+            ClientRequireSigning = winreg.EnumValue(LanManWorkStation, 2)[1]
+            ClientNegotiateSigning = winreg.EnumValue(LanManWorkStation, 1)[1]
+            if ClientRequireSigning == 1:
+                print("ClientRequireSigning: " + Fore.GREEN + "True" + Style.RESET_ALL)
+            else:
+                print("ClientRequireSigning: " + Fore.RED + "False" + Style.RESET_ALL)
+            if ClientNegotiateSigning == 1:
+                print("ClientNegotiateSigning: " + Fore.GREEN + "True" + Style.RESET_ALL)
+            else:
+                print("ClientNegotiateSigning: " + Fore.RED + "False" + Style.RESET_ALL)
+        with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Services\\LanManServer\\Parameters',0,winreg.KEY_READ) as LanManServer:
+            ServerRequireSigning = winreg.EnumValue(LanManServer,6)[1]
+            ServerNegotiateSigning = winreg.EnumValue(LanManServer,5)[1]
+            if ServerRequireSigning == 1:
+                print("ServerRequireSigning: " + Fore.GREEN + "True" + Style.RESET_ALL)
+            else:
+                print("ServerRequireSigning: " + Fore.RED + "False" + Style.RESET_ALL)
+            if ServerNegotiateSigning == 1:
+                print("ServerNegotiateSigning: " + Fore.GREEN + "True" + Style.RESET_ALL)
+            else:
+                print("ServerNegotiateSigning: " + Fore.RED + "False" + Style.RESET_ALL)
+        with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Services\\LDAP',0,winreg.KEY_READ) as LDAPKey:
+            LDAPSigning = winreg.EnumValue(LDAPKey,0)[1]
+            if LDAPSigning == 1:
+                print("LDAPSigning : Negotiate signing/sealing")
+            elif LDAPSigning == 2:
+                print("LDAPSigning : Require signing/sealing")
+            else:
+                print("LDAPSigning : No signing/sealing")
+        with winreg.OpenKey(machine_key,'SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0',0,winreg.KEY_READ) as SessionSecKey:
+            Key_Index = 0
+            NTLMinClientSec = None
+            NTLMinServerSec = None
+            InboundRestrictions = None
+            OutboundRestrictions = None
+            InboundAuditing = None
+            OutboundExceptions = None
+            while True:
+                try:
+                    KeyValue = winreg.EnumValue(SessionSecKey,Key_Index)
+                    if KeyValue[0] == "NtlmMinClientSec":
+                        NTLMinClientSec = KeyValue[1]
+                    elif KeyValue[0] == "NtlmMinServerSec":
+                        NTLMinServerSec = KeyValue[1]
+                    elif KeyValue[0] == "RestrictReceivingNTLMTraffic":
+                        InboundRestrictions = KeyValue[1]
+                    elif KeyValue[0] == "RestrictSendingNTLMTraffic":
+                        OutboundRestrictions = KeyValue[1]
+                    elif KeyValue[0] == "AuditReceivingNTLMTraffic":
+                        InboundAuditing = KeyValue[1]
+                    elif KeyValue[0] == "ClientAllowedNTLMServers":
+                        OutboundExceptions = KeyValue[1]
+                    Key_Index += 1
+                except OSError:
+                    break
+            if NTLMinClientSec == 536870912:
+                print("NTLMinClientSec: " + Fore.CYAN + str(NTLMinClientSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "128-bit encryption. If the value of either this entry or the NtlmMinClientSec entry is 0x20000000, then the connection will fail unless 128-bit encryption is negotiated"
+                + Style.RESET_ALL)
+            elif NTLMinClientSec == 524288:
+                print("NTLMinClientSec: " + Fore.CYAN + str(NTLMinClientSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "NTLMv2 session security. If the value of either this entry or the NtlmMinClientSec entry is 0x80000, then the connection will fail unless NTLMv2 session security is negotiated."
+                + Style.RESET_ALL)
+            elif NTLMinClientSec == 32:
+                print("NTLMinClientSec: " + Fore.CYAN + str(NTLMinClientSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "Message confidentiality. If the value of either this entry or the NtlmMinClientSec entry is 0x20, then the connection will fail unless message confidentiality is negotiated."
+                + Style.RESET_ALL)
+            elif NTLMinClientSec == 16:
+                print("NTLMinClientSec: " + Fore.CYAN + str(NTLMinClientSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "Message integrity. If the value of either this entry or the NtlmMinClientSec entry is 0x10, then the connection will fail unless message integrity is negotiated."
+                + Style.RESET_ALL)
+            else:
+                print("NTLMinClientSec: " + Fore.CYAN + str(NTLMinClientSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "None. No security is used for session security."
+                + Style.RESET_ALL)
+            if NTLMinServerSec == 536870912:
+                print("NTLMinServerSec: " + Fore.CYAN + str(NTLMinServerSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "128-bit encryption. If the value of either this entry or the NtlmMinClientSec entry is 0x20000000, then the connection will fail unless 128-bit encryption is negotiated"
+                + Style.RESET_ALL)
+            elif NTLMinServerSec == 524288:
+                print("NTLMinServerSec: " + Fore.CYAN + str(NTLMinServerSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "NTLMv2 session security. If the value of either this entry or the NtlmMinClientSec entry is 0x80000, then the connection will fail unless NTLMv2 session security is negotiated."
+                + Style.RESET_ALL)
+            elif NTLMinServerSec == 32:
+                print("NTLMinServerSec: " + Fore.CYAN + str(NTLMinServerSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "Message confidentiality. If the value of either this entry or the NtlmMinClientSec entry is 0x20, then the connection will fail unless message confidentiality is negotiated."
+                + Style.RESET_ALL)
+            elif NTLMinServerSec == 16:
+                print("NTLMinServerSec: " + Fore.CYAN + str(NTLMinServerSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "Message integrity. If the value of either this entry or the NtlmMinClientSec entry is 0x10, then the connection will fail unless message integrity is negotiated."
+                + Style.RESET_ALL)
+            else:
+                print("NTLMinServerSec: " + Fore.CYAN + str(NTLMinServerSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "None. No security is used for session security."
+                + Style.RESET_ALL)
+            print("InboundRestrictions: " + Fore.CYAN + str(InboundRestrictions) + Style.RESET_ALL)
+            print("OutboundRestrictions: " + Fore.CYAN + str(OutboundRestrictions) + Style.RESET_ALL)
+            print("InboundAuditing: " + Fore.CYAN + str(InboundAuditing) + Style.RESET_ALL)
+            print("OutboundExceptions: " + Fore.CYAN + str(OutboundExceptions) + Style.RESET_ALL)
 
 def GroupPolicy():
     pass
@@ -59,7 +251,16 @@ def AppLockerConfigBypass():
     pass
 
 def Printers():
-    pass
+    print("\n" + "\033[1m" + Fore.RED + "Printer Information [*]" + Style.RESET_ALL + "\033[0m")
+    strComputer = "."
+    objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
+    objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
+    colItems = objSWbemServices.ExecQuery("SELECT * FROM Win32_Printer")
+    for printer in colItems:
+        print("Printer: " + Fore.CYAN + printer.Name + Style.RESET_ALL + " " + "Printer Status: " + 
+        Fore.CYAN + printer.Status + Style.RESET_ALL + " " + "Network: " + Fore.CYAN + str(printer.Network) + 
+        " " + Style.RESET_ALL + "Default: " + Fore.CYAN + str(printer.Default) + Style.RESET_ALL)
+
 
 def NamedPipes():
     pass
@@ -71,7 +272,29 @@ def SysMon():
     pass
 
 def NetVersions():
-    pass
+    print("\n"+ "\033[1m" + Fore.RED + "CLR & .NET Versions [*]" + Style.RESET_ALL + "\033[0m")
+    CLRVersions = [] #Below this gets CLR Versions evey CLR as the file System.dll in it
+    with os.scandir("\\Windows\\Microsoft.Net\\Framework\\") as entries:
+        for entry in entries: #Get Directories in the powershell log file
+            FullDir = "\\Windows\\Microsoft.Net\\Framework\\" + "\\" + entry.name
+            try:
+                with os.scandir(FullDir) as files:
+                    for f in files:
+                        if f.name == 'System.dll':
+                            CLRVersions.append(entry.name)
+            except NotADirectoryError:
+                pass
+    with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
+        with winreg.OpenKey(machine_key,'Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5',0,winreg.KEY_READ) as dotNet35Version_Key:
+            version = winreg.EnumValue(dotNet35Version_Key,4)[1]
+        with winreg.OpenKey(machine_key,'Software\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full',0,winreg.KEY_READ) as dotNet4Version_Key:
+            version4 = winreg.EnumValue(dotNet4Version_Key,6)[1]
+    print(Fore.MAGENTA + "CLR Versions Found:" + Style.RESET_ALL)
+    for CLRversion in CLRVersions:
+        print("CLR Version: " + Fore.CYAN + CLRversion + Style.RESET_ALL)
+    print(Fore.MAGENTA + ".NET Versions:" + Style.RESET_ALL)
+    print(".NET Version: " + Fore.CYAN + version + Style.RESET_ALL)
+    print(".NET Version: " + Fore.CYAN + version4 + Style.RESET_ALL)
 
 def EicarAVTesting():
     strComputer = "."
@@ -521,31 +744,7 @@ def PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMaj
         print(Fore.CYAN + 'Within A Virtual Machine : ' + Style.RESET_ALL + str(is_VM))
     else:
         print(Fore.CYAN + 'Process Running As Virtual Machine : ' + Style.RESET_ALL + Fore.RED + str(is_VM) + Style.RESET_ALL)
- 
-def Logging(FilePath):
-    pass
-
-def UserPrivileges(FilePath):
-    pass
-
-def Network(FilePath):
-    pass
-
-def Processes(FilePath):
-    pass
-
-def Services(FilePath):
-    pass
-
-def Applications(FilePath):
-    pass
-
-def PathDLL(FilePath):
-    pass
-
-def WindowsCredentials(FilePath):
-    pass
-
+        
 def Parse_Arguments():
     Valid_Short_Options = ['-S','-L','-U','-N','-P','-E','-A','-D','-W']
     Valid_Long_Options = ['--SystemInfo','--Logging','--UserPrivileges','--Network','--Processes','--Services','--Applications','--Services','--PathDLL','--WindowsCredentials','--FileOutput']
