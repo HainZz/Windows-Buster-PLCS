@@ -10,29 +10,54 @@
         <TabControl>
             <TabItem Header="View-Windows-Information">
                 <TabControl>
-                    <TabItem Header="View-SystemInformation">
-                        <StackPanel>
-                            <WrapPanel>
-                                <Button x:Name="DisplayInformation" Width="250" Height="20" Click="DisplayInformation_Click">Display Information</Button>
-                            </WrapPanel>
-                            <Label FontWeight="Bold">Information Options:</Label>
-                            <CheckBox x:Name="cbSelectAll" Unchecked ="cbSelectAll_Checked" Checked="cbSelectAll_Checked" IsThreeState="True">Select All</CheckBox>
-                            <CheckBox x:Name="cbSystemInformation">Basic System Information</CheckBox>
-                            <CheckBox x:Name="cbMicrosoftUpdates">Enable Microsoft Updates</CheckBox>
-                            <CheckBox x:Name="cbPSSettings">PS Settings</CheckBox>
-                            <CheckBox x:Name="cbLSAProtection">LSA Protection</CheckBox>
-                            <CheckBox x:Name="cbCredentialGuard">Credential Guard</CheckBox>
-                            <CheckBox x:Name="cbWDigest">WDigest</CheckBox>
-                            <CheckBox x:Name="cbCachedCreds">No OF Cached Creds</CheckBox>
-                            <CheckBox x:Name="cbEnviromentVariables">Enviroment Variables</CheckBox>
-                            <CheckBox x:Name="cbInternetSettings">Internet Settings</CheckBox>
-                            <CheckBox x:Name="cbCurrentDrives">Current Drives Information</CheckBox>
-                            <CheckBox x:Name="cbAVInformation">AV Information</CheckBox>
-                            <CheckBox x:Name="cbUACConfiguration">UAC Configuration</CheckBox>
-                            <CheckBox x:Name="cbNTLMSettings">NTLM Settings</CheckBox>
-                            <CheckBox x:Name="cbPrinters">Printers</CheckBox>
-                            <CheckBox x:Name="cbNetVersions">.NET Versions</CheckBox>
-                        </StackPanel>
+                    <TabItem Header="View-System-Information">
+                        <ScrollViewer>
+                            <StackPanel>
+                                <WrapPanel>
+                                    <Button x:Name="DisplaySystemInformation" Width="250" Height="50" Click="DisplaySystemInformation_Click">Get System Information</Button>
+                                    <Label x:Name="RanCLILabel" Content=""></Label>
+                                </WrapPanel>
+                                <WrapPanel>
+                                    <Button x:Name="LoadFileOption" Width="250" Height="20" Click="LoadFileOption_Click">Input Output File</Button>
+                                    <TextBox x:Name="InputFileOption" Width="470" Height="20"></TextBox>
+                                </WrapPanel>
+                                <Label>Help: Directory For File Must Be Valid, File-Name must end .txt</Label>
+                                <Label x:Name="InputtedPathLabel" Content="Inputted Path:"></Label>
+                                <Label x:Name="ValidPathLabel" FontWeight="Bold" Content="Valid Path:"></Label>
+                                <Label FontWeight="Bold" Content="System Information Options:"></Label>
+                                <CheckBox x:Name="cbSelectAll" Unchecked ="cbSelectAll_Checked" Checked="cbSelectAll_Checked" IsThreeState="True">Select All</CheckBox>
+                                <CheckBox x:Name="cbSystemInformation">Basic System Information</CheckBox>
+                                <CheckBox x:Name="cbMicrosoftUpdates">Enable Microsoft Updates</CheckBox>
+                                <CheckBox x:Name="cbPSSettings">PS Settings</CheckBox>
+                                <CheckBox x:Name="cbLSAProtection">LSA Protection</CheckBox>
+                                <CheckBox x:Name="cbCredentialGuard">Credential Guard</CheckBox>
+                                <CheckBox x:Name="cbWDigest">WDigest</CheckBox>
+                                <CheckBox x:Name="cbCachedCreds">No OF Cached Creds</CheckBox>
+                                <CheckBox x:Name="cbEnviromentVariables">Enviroment Variables</CheckBox>
+                                <CheckBox x:Name="cbInternetSettings">Internet Settings</CheckBox>
+                                <CheckBox x:Name="cbCurrentDrives">Current Drives Information</CheckBox>
+                                <CheckBox x:Name="cbAVInformation">AV Information</CheckBox>
+                                <CheckBox x:Name="cbUACConfiguration">UAC Configuration</CheckBox>
+                                <CheckBox x:Name="cbNTLMSettings">NTLM Settings</CheckBox>
+                                <CheckBox x:Name="cbPrinters">Printers</CheckBox>
+                                <CheckBox x:Name="cbNetVersions">.NET Versions</CheckBox>
+                                <WrapPanel>
+                                    <Button x:Name="LoadChosenFile" Width="250" Height="20" Click="LoadChosenFile_Click">Optional Chosen File</Button>
+                                    <Label x:Name="ValidOptionalFile" Content=""></Label>
+                                    <TextBox x:Name="OptionalChosenFile" Width="470" Height="20"></TextBox>
+                                </WrapPanel>
+                                <Button x:Name="DisplayInformation" Width="250" Height="50" Click="DisplayInformation_Click" Content="Display Information"/>
+                                <Label x:Name="DisplayCanBeRan" Content=""></Label>
+                                <TextBox
+                                    x:Name="DisplaySettingText"
+                                    IsReadOnly="True"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    ScrollViewer.CanContentScroll="True"
+                                    TextWrapping="Wrap">
+                                </TextBox>
+                            </StackPanel>
+                        </ScrollViewer>
                     </TabItem>
                     <TabItem Header="View-UserInformation">
                         <WrapPanel>
@@ -41,10 +66,6 @@
                 </TabControl>
             </TabItem>
             <TabItem Header="Windows Vuln Suggester">
-                <WrapPanel>
-                </WrapPanel>
-            </TabItem>
-            <TabItem Header="Load Files">
                 <WrapPanel>
                 </WrapPanel>
             </TabItem>

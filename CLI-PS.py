@@ -21,7 +21,7 @@ import subprocess
 def SystemInfo(FilePath):
     print("\033[1m" + Fore.MAGENTA + "SYSTEM INFORMATION [*]" + Style.RESET_ALL + "\033[0m")
     print("\n")
-    PowerShellScript = open(FilePath,'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get updatermation using python methods. 
+    PowerShellScript = open(FilePath.lstrip(),'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get updatermation using python methods. 
     subprocess.run(["powershell","-Command","systeminfo | Set-Content -Path .\Results.txt"]) #Runs the subprocess to produce the results.txt file
     BasicSystemInformation(PowerShellScript)
     WindowsUpdates(PowerShellScript)
@@ -60,7 +60,7 @@ def DrivesInformation(PowerShellScript):
         'Avaliable Space: ' + Fore.CYAN + SpaceConversion + Style.RESET_ALL + " " +
         'File System: ' + Fore.CYAN + FileSystem + Style.RESET_ALL + " " +
         'File Permissions: ' + Fore.CYAN + Unix_Permissions + Style.RESET_ALL)
-        PowerShellScript.write('\nCaption:' + caption + 'Type:' + VolumeLabel + 'Avaliable Space:' + SpaceConversion + 'File System:' + FileSystem + 'File Permissions:' + Unix_Permissions)
+        PowerShellScript.write('\nCaption: ' + caption + 'Type: ' + VolumeLabel + 'Avaliable Space: ' + SpaceConversion + 'File System: ' + FileSystem + 'File Permissions: ' + Unix_Permissions)
 
 
 ##SOURCE: https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
@@ -585,7 +585,7 @@ def printWindowsUpdateList(WindowsUpdateList,PowerShellScript):
         print("Date : "+ Fore.CYAN + update[3] + Style.RESET_ALL)
         print("Update Description : "+ Fore.CYAN + update[4] + Style.RESET_ALL)
         print(Fore.GREEN + "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++" + Style.RESET_ALL)
-        PowerShellScript.write("\nID:" + update[0] + "," + "Client Application ID:" + update[1] + "," + "Full Update Title:" + update[2] + "," + "Date:" + update[3] + "," + "Update Description:" + update[4])
+        PowerShellScript.write("\nID: " + update[0] + "\n" + "Client Application ID: " + update[1] + "\n" + "Full Update Title: " + update[2] + "\n" + "Date: " + update[3] + "\n" + "Update Description: " + update[4] + "\n")
 
 def EnviromentVariables(PowerShellScript):
     SystemEnviromentVariables = {}
@@ -607,13 +607,13 @@ def EnviromentVariables(PowerShellScript):
     print("\033[1m" + Fore.RED + "ENVIRONMENT VARIABLES [*]" + Style.RESET_ALL + "\033[0m" +"\n")
     PowerShellScript.write("\nENVIRONMENT VARIABLES [*]")
     print(Fore.GREEN + "SYSTEM VARIABLES : " + Style.RESET_ALL)
-    PowerShellScript.write("\nSYSTEM VARIABLES : ")
+    PowerShellScript.write("\n\nSYSTEM VARIABLES : ")
     for key in SystemEnviromentVariables:
         print("NAME : " + Fore.CYAN + key + Style.RESET_ALL + " VALUE : " + Fore.CYAN + SystemEnviromentVariables[key] + Style.RESET_ALL)
         PowerShellScript.write("\nNAME : " + key + "VALUE : " + SystemEnviromentVariables[key])
     print('\n')
     print(Fore.GREEN + "USER VARIABLES : " + Style.RESET_ALL)
-    PowerShellScript.write("\nUSER VARIABLES : ")
+    PowerShellScript.write("\n\nUSER VARIABLES : ")
     for key in UserEnvironmentVariables:
         print("NAME : " + Fore.CYAN + key + Style.RESET_ALL + " VALUE : " + Fore.CYAN + UserEnvironmentVariables[key] + Style.RESET_ALL)
         PowerShellScript.write("\nNAME : " + key + "VALUE : " + UserEnvironmentVariables[key])
@@ -725,13 +725,14 @@ def PrintPSSettings(PSSettings,PowerShellScript):
     print("Output_Directory_Transcription: ",Fore.RED+str(PSSettings[4]['Output_Directory_Setting'])+Style.RESET_ALL)
     PowerShellScript.write("\nOutput_Directory_Transcription"+str(PSSettings[4]['Output_Directory_Setting']))
     print(Fore.GREEN + "Found Files Within Output_Directory [*]  Check These for cool transcripts with stuff in them." + Style.RESET_ALL)
-    PowerShellScript.write("\nFound Files Within Output_Directory [*] Check These for cool transcripts with stuff in them.")
+    PowerShellScript.write("\n\nFound Files Within Output_Directory [*] Check These for cool transcripts with stuff in them.")
     for key in PSSettings[5]:
         print(Fore.GREEN + "Found Files Within Directory " + Style.RESET_ALL + key + ":")
         PowerShellScript.write("\nFound Files Within Directory " + key + ":")
         for file in PSSettings[5][key]:
             print("File: "+ Fore.CYAN + file + Style.RESET_ALL)
             PowerShellScript.write("\nFile: " + file)
+        PowerShellScript.write("\n")
 
 
 def BasicSystemInformation(PowerShellScript):
@@ -862,6 +863,7 @@ def PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMaj
         print(Fore.CYAN + 'Within A Virtual Machine : ' + Style.RESET_ALL + Fore.RED + str(is_VM) + Style.RESET_ALL)
         PowerShellScript.write("\nWithin A Virtual Machine : " + str(is_VM))
         
+##TODO FIX COMMAND LINE ARGUMENTS SPECIFICALLY FILE PATH
 def Parse_Arguments():
     Valid_Short_Options = ['-S','-L','-U','-N','-P','-E','-A','-D','-W']
     Valid_Long_Options = ['--SystemInfo','--Logging','--UserPrivileges','--Network','--Processes','--Services','--Applications','--Services','--PathDLL','--WindowsCredentials','--FileOutput']
