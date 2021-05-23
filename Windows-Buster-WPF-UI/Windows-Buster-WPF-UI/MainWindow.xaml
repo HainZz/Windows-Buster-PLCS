@@ -66,8 +66,33 @@
                 </TabControl>
             </TabItem>
             <TabItem Header="Windows Vuln Suggester">
-                <WrapPanel>
-                </WrapPanel>
+                <ScrollViewer>
+                    <StackPanel>
+                        <WrapPanel>
+                            <Button x:Name="UpdateMSRCcsv" Width="250" Height="50" Click="UpdateMSRCcsv_Click">Update MSRC CSV</Button>
+                            <Label x:Name="UpdateStatus" Content=""></Label>
+                        </WrapPanel>
+                        <Label FontWeight="Bold">Enter MSRC Absolute File Path:</Label>
+                        <TextBox x:Name="MSRCFileOption" Width="470" Height="20"></TextBox>
+                        <WrapPanel>
+                            <Button x:Name="GetVulns" Width="250" Height="50" Click="GetVulns_Click">Display Vulns Based Off systeminfo.txt file</Button>
+                            <Label x:Name="GetVulnStatus" Content=""></Label>
+                        </WrapPanel>
+                        <Label FontWeight="Bold">Enter MSRC CSV Absolute File Path:</Label>
+                        <TextBox x:Name="VulnMSRCFileOption" Width="470" Height="20"></TextBox>
+                        <Label FontWeight="Bold">Enter System Info File (NOTE: MUST BE WINDOWS 10)</Label>
+                        <TextBox x:Name="SystemInfoOption" Width="470" Height="20"></TextBox>
+                        <Label FontWeight="Bold">Found Vulns:</Label>
+                        <TextBox
+                                    x:Name="DisplayVulns"
+                                    IsReadOnly="True"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    ScrollViewer.CanContentScroll="True"
+                                    TextWrapping="Wrap">
+                        </TextBox>
+                    </StackPanel>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
     </Grid>

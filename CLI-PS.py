@@ -881,12 +881,11 @@ def Parse_Arguments():
     parse.add_argument('-F','--FileOutput',help='Directory/Filename where the powershell code shall be written too (note that if the file does not exist it will be created automatically',required=True)
     arguments = parse.parse_args()
     ArgumentsProvided = False
-    OptionsProvided = False
     while ArgumentsProvided == False:
-        SplitPath = arguments.FileOutput.rsplit('/',1)[0]
-        if '/' not in SplitPath:
-            SplitPath = './' 
-        OutputPath = Path(SplitPath)
+        SplitPath = arguments.FileOutput.rsplit('\\',1)[0]
+        if '\\' not in SplitPath:
+            SplitPath = '.\\' 
+        OutputPath = Path(SplitPath.strip())
         if OutputPath.exists() == False:
             print('You must provide a valid output path')
             arguments.FileOutput = input('Please enter a valid output path : \n')
@@ -898,6 +897,7 @@ if __name__ == '__main__':
     arguments = Parse_Arguments()
     if arguments.SystemInfo == True:
         SystemInfo(arguments.FileOutput)
+        print("CREATED_FILE")
     if arguments.Logging == True:
         Logging(arguments.FileOutput)
     if arguments.UserPrivileges == True:

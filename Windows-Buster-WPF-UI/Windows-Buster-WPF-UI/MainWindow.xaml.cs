@@ -23,7 +23,6 @@ namespace Windows_Buster_WPF_UI
         {
             int index = FilePath.LastIndexOf(@"\");
             string Path = FilePath.Substring(0,index + 1);
-            Debug.WriteLine(Path);
             bool ValidFilePath = Directory.Exists(Path);
             return ValidFilePath;
         }
@@ -58,7 +57,7 @@ namespace Windows_Buster_WPF_UI
             Debug.WriteLine(result);
             return result;
         }
-        private void DisplaySystemInformation_Click(object sender, RoutedEventArgs e)
+        private async void DisplaySystemInformation_Click(object sender, RoutedEventArgs e)
         {
             if (ValidPathLabel.Content != "Valid Path : True")
             {
@@ -67,25 +66,55 @@ namespace Windows_Buster_WPF_UI
             }
             else
             {
+                //SOURCE:https://docs.microsoft.com/en-us/dotnet/api/system.io.stringreader.readline?view=net-5.0
                 //SOURCE: https://betterprogramming.pub/running-python-script-from-c-and-working-with-the-results-843e68d230e5
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "C:\\Python39\\python.exe"; //This could probably done better this points to the python.exe on my system i assume its the same on yours :/
-                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\CLI-PS.py";
+                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\CLI-PS.py"; //IF U WANT TO COMPILE THIS YOU NEED TO CHANGE IT FOR SOME REASON WPF HATES REALTIVE PATHS
                 string RawFilePath = (string)InputtedPathLabel.Content;
                 string RefineFilePath = RawFilePath.Substring(RawFilePath.IndexOf(':') + 1);
                 string FileArgument = "-F" + RefineFilePath;
-                FileArgument = FileArgument.Trim();
+                //FileArgument = FileArgument.Trim();
                 string OptionArgument = "-S";
                 start.Arguments = $"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\"";
                 Debug.WriteLine($"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\"");
                 start.UseShellExecute = false;
-                start.RedirectStandardOutput = false;
+                start.CreateNoWindow = true;
+                start.RedirectStandardOutput = true;
                 start.RedirectStandardError = false;
+                var stdout = "";
                 using (Process process = Process.Start(start))
                 {
+                    stdout = process.StandardOutput.ReadToEnd();
                 }
-                RanCLILabel.Content = "OUTPUT FILE GENERATED IN: " + RefineFilePath;
-                RanCLILabel.Foreground = new SolidColorBrush(Colors.Green);
+                var LastLine = "";
+                StringReader strReader = new StringReader(stdout);
+                bool Created = false;
+                while(true)
+                {
+                    LastLine = strReader.ReadLine();
+                    if(LastLine == "CREATED_FILE")
+                    {
+                        Created = true;
+                    }
+                    else if(LastLine == null)
+                    {
+                        break;
+                    }
+                }
+                Debug.WriteLine(RawFilePath);
+                //Catch any werid exception where the output file fails to generate within the python-code this checks this by checking that the last msg STDOUT sent us is CREATED_FILE
+                if (Created == true)
+                {
+                    RanCLILabel.Content = "OUTPUT FILE GENERATED IN: " + RefineFilePath;
+                    RanCLILabel.Foreground = new SolidColorBrush(Colors.Green);
+                }
+                else
+                {
+                    RanCLILabel.Content = "OUTPUT FILE FAILED TO GENERATE";
+                    RanCLILabel.Foreground = new SolidColorBrush(Colors.Red);
+                }
+                
             }
         }
         private void cbSelectAll_Checked(object sender, RoutedEventArgs e)
@@ -266,6 +295,143 @@ namespace Windows_Buster_WPF_UI
                 {
                     ValidOptionalFile.Content = "Valid File : False - File Could Not Be Found Check Inputted Directory";
                     ValidOptionalFile.Foreground = new SolidColorBrush(Colors.Red);
+                }
+            }
+        }
+
+        private void UpdateMSRCcsv_Click(object sender, RoutedEventArgs e)
+        {
+            string FilePath;
+            Program p = new Program();
+            FilePath = MSRCFileOption.Text;
+            bool ValidPath = p.CheckValidDirectory(FilePath);
+            bool endsInCSV = FilePath.EndsWith(".csv");
+            if (ValidPath == true && endsInCSV == true)
+            {
+                ProcessStartInfo start = new ProcessStartInfo();
+                start.FileName = "C:\\Python39\\python.exe";
+                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\WES.py";
+                var OptionArgument = "-M";
+                var FileArgument = "-C " + FilePath;
+                FileArgument = FileArgument.Trim();
+                start.Arguments = $"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\"";
+                Debug.WriteLine($"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\"");
+                start.UseShellExecute = false;
+                start.RedirectStandardOutput = true;
+                start.RedirectStandardError = true;
+                start.CreateNoWindow = true;
+                var stdout = "";
+                var stderr = "";
+                using (Process process = Process.Start(start))
+                {
+
+                    stdout = process.StandardOutput.ReadToEnd();
+                    stderr = process.StandardError.ReadToEnd();
+                }
+                Debug.WriteLine(stdout);
+                Debug.WriteLine(stderr);
+                var LastLine = "";
+                StringReader strReader = new StringReader(stdout);
+                bool Created = false;
+                while (true)
+                {
+                    LastLine = strReader.ReadLine();
+                    if (LastLine == "CREATED_FILE")
+                    {
+                        Created = true;
+                    }
+                    else if (LastLine == null)
+                    {
+                        break;
+                    }
+                }
+                if (Created == true)
+                {
+                    UpdateStatus.Content = "OUTPUT FILE GENERATED IN: " + FilePath;
+                    UpdateStatus.Foreground = new SolidColorBrush(Colors.Green);
+                }
+                else
+                {
+                    UpdateStatus.Content = "OUTPUT FILE FAILED TO GENERATE";
+                    UpdateStatus.Foreground = new SolidColorBrush(Colors.Red);
+                }
+            }
+            else
+            {
+                UpdateStatus.Content = "PLEASE INPUT VALID FILE FOR MSRC CSV NOTE MUST BE VALID DIRECTORY AND END IN .csv";
+                UpdateStatus.Foreground = new SolidColorBrush(Colors.Red);
+            }
+        }
+
+        private void GetVulns_Click(object sender, RoutedEventArgs e)
+        {
+            string MSCVFilePath;
+            string SystemInfoFilePath;
+            Program p = new Program();
+            MSCVFilePath = VulnMSRCFileOption.Text;
+            SystemInfoFilePath = SystemInfoOption.Text;
+            bool ValidMSCVPath = p.CheckValidFile(MSCVFilePath);
+            bool ValidSystemPath = p.CheckValidFile(SystemInfoFilePath);
+            bool ValidMSCVExt = MSCVFilePath.EndsWith(".csv");
+            bool ValidSystemExt = SystemInfoFilePath.EndsWith(".txt");
+            bool ValidMSCV;
+            bool ValidSystem;
+            if (ValidMSCVPath == true && ValidMSCVExt == true)
+            {
+                ValidMSCV = true;
+            }
+            else
+            {
+                ValidMSCV = false;
+            }
+            if (ValidSystemPath == true && ValidSystemExt)
+            {
+                ValidSystem = true;
+            }
+            else
+            {
+                ValidSystem = false;
+            }
+            if (ValidSystem == true && ValidMSCV == true)
+            {
+                ProcessStartInfo start = new ProcessStartInfo();
+                start.FileName = "C:\\Python39\\python.exe";
+                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\WES.py";
+                var OptionArgument = "-S";
+                var FileArgument = "-C " + MSCVFilePath;
+                var FileArgument2 = "-F " + SystemInfoFilePath;
+                FileArgument = FileArgument.Trim();
+                FileArgument2 = FileArgument2.Trim();
+                start.Arguments = $"\"{cmd}\" \"{FileArgument}\" \"{FileArgument2}\" \"{OptionArgument}\"";
+                Debug.WriteLine($"\"{cmd}\" \"{FileArgument}\" \"{FileArgument2}\" \"{OptionArgument}\"");
+                start.UseShellExecute = false;
+                start.RedirectStandardOutput = true;
+                start.RedirectStandardError = true;
+                start.CreateNoWindow = true;
+                var stdout = "";
+                var stderr = "";
+                using (Process process = Process.Start(start))
+                {
+
+                    stdout = process.StandardOutput.ReadToEnd();
+                    stderr = process.StandardError.ReadToEnd();
+                }
+                Debug.WriteLine(stdout);
+                Debug.WriteLine(stderr);
+                DisplayVulns.Text = stdout;
+
+            }
+            else
+            {
+                if(ValidMSCV == false)
+                {
+                    GetVulnStatus.Content = "INVALID MSCV ENTRY: MUST POINT TO AN EXISTING .csv FILE";
+                    GetVulnStatus.Foreground = new SolidColorBrush(Colors.Red);
+                }
+                else
+                {
+                    GetVulnStatus.Content = "INVALID SYSTEM ENTRY: MUST POINT TO AN EXISTING .txt FILE";
+                    GetVulnStatus.Foreground = new SolidColorBrush(Colors.Red);
                 }
             }
         }
