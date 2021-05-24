@@ -4,7 +4,6 @@ C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-U
 C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\bin\Debug\netcoreapp3.1\Windows-Buster-WPF-UI.runtimeconfig.dev.json
 C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\bin\Debug\netcoreapp3.1\Windows-Buster-WPF-UI.dll
 C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\bin\Debug\netcoreapp3.1\Windows-Buster-WPF-UI.pdb
-C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\obj\Debug\netcoreapp3.1\Windows-Buster-WPF-UI.csprojAssemblyReference.cache
 C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\obj\Debug\netcoreapp3.1\MainWindow.g.cs
 C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\obj\Debug\netcoreapp3.1\App.g.cs
 C:\Users\jackh\Documents\Andrews-Coding\Windows-Buster-PLCS\Windows-Buster-WPF-UI\Windows-Buster-WPF-UI\obj\Debug\netcoreapp3.1\Windows-Buster-WPF-UI_MarkupCompile.cache

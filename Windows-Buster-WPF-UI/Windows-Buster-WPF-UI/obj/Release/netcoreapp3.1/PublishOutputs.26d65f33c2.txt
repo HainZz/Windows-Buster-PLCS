@@ -1,0 +1,5 @@
+C:\Users\jackh\Desktop\Windows-Buster-WPF-UI.exe
+C:\Users\jackh\Desktop\Windows-Buster-WPF-UI.dll
+C:\Users\jackh\Desktop\Windows-Buster-WPF-UI.deps.json
+C:\Users\jackh\Desktop\Windows-Buster-WPF-UI.runtimeconfig.json
+C:\Users\jackh\Desktop\Windows-Buster-WPF-UI.pdb

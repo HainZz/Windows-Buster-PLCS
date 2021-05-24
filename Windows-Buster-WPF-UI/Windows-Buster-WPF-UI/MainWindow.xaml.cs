@@ -74,7 +74,7 @@ namespace Windows_Buster_WPF_UI
                 //SOURCE: https://betterprogramming.pub/running-python-script-from-c-and-working-with-the-results-843e68d230e5
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "C:\\Python39\\python.exe"; //This could probably done better this points to the python.exe on my system i assume its the same on yours :/
-                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\CLI-PS.py"; //IF U WANT TO COMPILE THIS YOU NEED TO CHANGE IT FOR SOME REASON WPF HATES REALTIVE PATHS
+                string cmd = "CLI-PS.py"; 
                 string RawFilePath = (string)InputtedPathLabel.Content;
                 string RefineFilePath = RawFilePath.Substring(RawFilePath.IndexOf(':') + 1);
                 string FileArgument = "-F" + RefineFilePath;
@@ -322,7 +322,7 @@ namespace Windows_Buster_WPF_UI
             {
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "C:\\Python39\\python.exe";
-                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\WES.py";
+                string cmd = "WES.py";
                 var OptionArgument = "-M";
                 var FileArgument = "-C " + FilePath;
                 FileArgument = FileArgument.Trim();
@@ -412,7 +412,7 @@ namespace Windows_Buster_WPF_UI
             {
                 ProcessStartInfo start = new ProcessStartInfo();
                 start.FileName = "C:\\Python39\\python.exe";
-                string cmd = "C:\\Users\\jackh\\Documents\\Andrews-Coding\\Windows-Buster-PLCS\\WES.py";
+                string cmd = "WES.py";
                 var OptionArgument = "-S";
                 var FileArgument = "-C " + MSCVFilePath;
                 var FileArgument2 = "-F " + SystemInfoFilePath;
