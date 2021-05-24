@@ -13,6 +13,7 @@ from pathlib import Path
 
 #SOURCE: https://github.com/haginara/msrc-python/blob/34a038a30f746f1e3a16eb5a04c1002d22e0d75e/msrc.py#L129
 def msrCSV(MSRC_File_Path):
+    #This function leverages the MSRC API to build a massive CSV of CVE's that we can compare systeminfo too and see potentially missing patches
     LinesToWrite=[]
     #Get all monthly releases
     update_request = requests.get(f"https://api.msrc.microsoft.com/Updates",headers={"Accept":"application/json"},params={"api-version": datetime.now().year})
@@ -29,13 +30,13 @@ def msrCSV(MSRC_File_Path):
                 #Enumerate over KB's per CVE
                 for kb in vuln['Remediations']:
                     if 'ProductID' in kb:
-                        for productid in kb['ProductID']:
+                        for productid in kb['ProductID']: #Get every productID within the KB
                             CSVLine = []
                             UnConvertedDate = vuln['RevisionHistory'][-1]['Date']
                             UnConvertedDate = UnConvertedDate.replace("T"," ")
-                            CovertedDate = UnConvertedDate.replace("Z","")
+                            CovertedDate = UnConvertedDate.replace("Z","") #Conver date to our own Date-Time format that is nicer
                             BulletinKB = kb['Description']['Value']
-                            for threat in vuln['Threats']:
+                            for threat in vuln['Threats']: #Get every threat within a vuln
                                 if 'ProductID' in threat:  
                                     if productid in threat['ProductID']:
                                         if threat['Type'] == 3: #Types seem to specify there description i.e type 3 seems to be severity description type 0 impact
@@ -50,10 +51,11 @@ def msrCSV(MSRC_File_Path):
                             Affected_Component = vuln['Notes'][-1]['Title']
                             Supersedes= kb.get('Supercedence')
                             try:
-                                Supersedes = Supersedes.replace(',',';').strip()
+                                Supersedes = Supersedes.replace(',',';').strip() #We need to this because some lines will contain multiple kbs such 312321,312321,312231 we cant have this in a CSV so we need replace this with a different splitter i,e : instead of ,
                                 Supersedes = Supersedes.replace(" ","")
                             except AttributeError:
                                 pass
+                            #Append in the order we want our CSV file to be formatted to an Line array
                             CVE = vuln['CVE']
                             CSVLine.append(CovertedDate) #0
                             CSVLine.append(BulletinKB) #1
@@ -66,6 +68,7 @@ def msrCSV(MSRC_File_Path):
                             CSVLine.append(CVE)
                             LinesToWrite.append(CSVLine)
     with open(MSRC_File_Path.lstrip(),'w',newline="") as msrc:
+        #Opens/Creates the CSV at the file-path we use the csv.writer to write each line too the CSV file
         writer = csv.writer(msrc,delimiter=',',quotechar='"',quoting=csv.QUOTE_MINIMAL)
         for line in LinesToWrite:
             writer.writerow(line)
@@ -75,6 +78,7 @@ def msrCSV(MSRC_File_Path):
 
 ##SOURCE: https://www.gaijin.at/en/infos/windows-version-numbers
 def determine_version_build(Build_Number,Server):
+    #This dict maps build numbers to the OS Versions off Windows i only included Windows 10 and some server things
     builds = {
         '10240':'Windows 10 Version 1507',
         '10586':'Windows 10 Version 1511',
@@ -98,7 +102,7 @@ def determine_version_build(Build_Number,Server):
 
 ##SOURCE : https://stackoverflow.com/questions/436220/how-to-determine-the-encoding-of-text
 def DecodeFile(InFile):
-    File = open(InFile.lstrip(),'rb').read()
+    File = open(InFile.lstrip(),'rb').read() #We can use chardet to detect confidentialy the encoding of an string and decode it and return a plain-text string.
     encoding_type = chardet.detect(File)
     File = File.decode(encoding_type['encoding'],'ignore')
     return File
@@ -118,13 +122,14 @@ def search(InputFile,CSVFile):
     for x in OS_VERSION.split():
         if x != 'Service' and x != 'Pack' and x !='Build':
             OS_Version_array.append(x)
+    #This OS_Version_Array removes all uncessary words from the OS_Version and purely gets build numbers etc.
     if 'Server' in OS_NAME:
         Server = True
     else:
         Server = False
     Windows10_Version = determine_version_build(OS_Version_array[2],Server)
     if arch == "x86":
-        arch = '32-bit'
+        arch = '32-bit' #Convert arch to what we need in order to build our windows10 versions strings. This needs to be an exact format or we will never find CVE's for our versions
     elif arch == "x64":
         arch = 'x64-based'
     Windows10_Version = Windows10_Version + " for " + arch + " Systems"
@@ -154,12 +159,12 @@ def Find_Potential_Vulns(Windows10_Version,Stripped_Hotfix,MSRC_File_Path):
     marked = set()
     for hotfix in Stripped_Hotfix:
         get_superseeded_hotfixes(Found_Vulns,hotfix,marked)
-    check = filter(lambda cve: cve[9],Found_Vulns)
+    check = filter(lambda cve: cve[9],Found_Vulns) #Get all vulns where potential-value is marked as True
     supersedes = set([x[7] for x in check])
-    checked = filter(lambda cve: cve[1] in supersedes,check)
+    checked = filter(lambda cve: cve[1] in supersedes,check) #If we have a bulletin in the CVE then we mark it as false as we have an bulletin thats been installed that solves the CSV
     for vuln in checked:
         vuln[9] = False
-    Found_Vulns = list(filter(lambda cve: cve[9],Found_Vulns))
+    Found_Vulns = list(filter(lambda cve: cve[9],Found_Vulns)) #This gets all the values left that are true these still could be false positives but we managed too reduce it by quite a bit
     print("FOUND VULNS NOTE: THEY'RE MAY BE FALSE POSITIVES OR STUFF THAT SHOULDNT COME UP DUE TO THE DATASET [*]")
     for maybe_vuln in Found_Vulns:
         print("CVE: " + maybe_vuln[8])
@@ -182,6 +187,7 @@ def Parse_Arguments():
     parse.add_argument('-F','--file',help='Specify systeminfo.txt file at this location will program will exit if none is found when searching')
     parse.add_argument('-C','--msrcfile',help='Specify MSRC CSV Location make sure path is abosolute',required=True)
     arguments = parse.parse_args()
+    #Check that msrcfile is valid for the update mode the directory has to exist and planned output file has to be .csv 
     if arguments.msrc == True:
         ArgumentsProvided = False
         while ArgumentsProvided == False:
@@ -198,6 +204,7 @@ def Parse_Arguments():
                 else:
                     print("You must enter a valid file extension i.e .csv")
                     exit(1)
+    #Check that msrcfile and systeminfo file is valid for the search mode. mainly for CLI usage as the gui contains its own validation
     else:
         if (os.path.isfile(arguments.msrcfile.lstrip())):
             if arguments.msrcfile.endswith('.csv'):

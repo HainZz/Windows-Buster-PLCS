@@ -21,6 +21,7 @@ namespace Windows_Buster_WPF_UI
     {
         public bool CheckValidDirectory(string FilePath)
         {
+            //Checks the Directory is valid by taking in a string FilePath splitting it up and checking the directory exists return a bool value based on whether it does or not
             int index = FilePath.LastIndexOf(@"\");
             string Path = FilePath.Substring(0,index + 1);
             bool ValidFilePath = Directory.Exists(Path);
@@ -28,6 +29,7 @@ namespace Windows_Buster_WPF_UI
         }
         public bool CheckValidFile(string FilePath)
         {
+            //We can simply pass FilePath and use the File.Exists method to check whether it return a bool value
             bool ValidFile = File.Exists(FilePath);
             return ValidFile;
         }
@@ -41,6 +43,7 @@ namespace Windows_Buster_WPF_UI
         {
             InitializeComponent();
         }
+        // Here we use the DisplayCheck and take in the file command and uses an start + end delim to get everything between those within the file. Adds this to results that is then put onto the textbox
         private string DisplayCheck(string file, string start_delim, string end_delim,string result)
         {
             string line;
@@ -59,6 +62,7 @@ namespace Windows_Buster_WPF_UI
         }
         private async void DisplaySystemInformation_Click(object sender, RoutedEventArgs e)
         {
+            //IF this label is set to valid then an valid file has been inputted and can be used
             if (ValidPathLabel.Content != "Valid Path : True")
             {
                 RanCLILabel.Content = "PATH FILE IS INVALID";
@@ -77,12 +81,13 @@ namespace Windows_Buster_WPF_UI
                 //FileArgument = FileArgument.Trim();
                 string OptionArgument = "-S";
                 start.Arguments = $"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\"";
-                Debug.WriteLine($"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\"");
+                Debug.WriteLine($"\"{cmd}\" \"{FileArgument}\" \"{OptionArgument}\""); //Build our arguments which is esentially the run command for the GUI
                 start.UseShellExecute = false;
-                start.CreateNoWindow = true;
+                start.CreateNoWindow = true; //This means that there is no python pop-up window a little less jarring than before
                 start.RedirectStandardOutput = true;
                 start.RedirectStandardError = false;
                 var stdout = "";
+                //Below we start the process and read standard out and check for the 'CREATE_FILE' output if we find this its safe to say the file was made
                 using (Process process = Process.Start(start))
                 {
                     stdout = process.StandardOutput.ReadToEnd();
@@ -145,6 +150,7 @@ namespace Windows_Buster_WPF_UI
             Program p = new Program();
             bool ValidDirectory = p.CheckValidDirectory(FilePath);
             bool endsInTxt = FilePath.EndsWith(".txt");
+            //Update label based on the checks performed on the filepath
             if (endsInTxt == true && ValidDirectory == true)
             {
                 ValidPathLabel.Content = "Valid Path : True";
@@ -166,6 +172,7 @@ namespace Windows_Buster_WPF_UI
         }
         private void DisplayInformation_Click(object sender, RoutedEventArgs e)
         {
+            //Here we check the parameters the output that we are reading file. If this is invalid we display and error message else we check the checkboxes and call the DisplayCheck function passing in delimeters based on what information we wanna find
             Program p = new Program();
             string file;
             string result = "";
@@ -191,6 +198,7 @@ namespace Windows_Buster_WPF_UI
             {
                 Valid_Optional = true;
             }
+            //Check that either the prievously created output file is valid or the optional input file is valid
             if (Valid_Default == true || Valid_Optional == true)
             {
                 if (Valid_Optional)
@@ -269,12 +277,14 @@ namespace Windows_Buster_WPF_UI
             }
             else
             {
+                //None were valid this means that no file optional file was given and the prievously created file (default file) was not avaliable
                 DisplayCanBeRan.Content = "Cannot Be Ran - No Default & No Optional";
                 DisplayCanBeRan.Foreground = new SolidColorBrush(Colors.Red);
             }
         }
         private void LoadChosenFile_Click(object sender, RoutedEventArgs e)
         {
+            //Checks the validity of the chosen optional file.
             Program p = new Program();
             string FilePath = OptionalChosenFile.Text;
             bool ValidFile = p.CheckValidFile(FilePath);
@@ -301,11 +311,13 @@ namespace Windows_Buster_WPF_UI
 
         private void UpdateMSRCcsv_Click(object sender, RoutedEventArgs e)
         {
+            //This will run the -M argument for the WES.py tool. this will create / update the MSRC csv based of the output path specified
             string FilePath;
             Program p = new Program();
             FilePath = MSRCFileOption.Text;
             bool ValidPath = p.CheckValidDirectory(FilePath);
             bool endsInCSV = FilePath.EndsWith(".csv");
+            //Check the output file is actually valid
             if (ValidPath == true && endsInCSV == true)
             {
                 ProcessStartInfo start = new ProcessStartInfo();
@@ -345,6 +357,7 @@ namespace Windows_Buster_WPF_UI
                         break;
                     }
                 }
+                //Check that we receive the "CREATED_FILE" from stdout if so we can assume the file created fine else display a potential error
                 if (Created == true)
                 {
                     UpdateStatus.Content = "OUTPUT FILE GENERATED IN: " + FilePath;
@@ -365,6 +378,7 @@ namespace Windows_Buster_WPF_UI
 
         private void GetVulns_Click(object sender, RoutedEventArgs e)
         {
+            //This runs the -S option of WES.py this performs a vuln search based off the systeminfo file and prints potential vulns to the textbox on the GUI.
             string MSCVFilePath;
             string SystemInfoFilePath;
             Program p = new Program();
@@ -376,6 +390,7 @@ namespace Windows_Buster_WPF_UI
             bool ValidSystemExt = SystemInfoFilePath.EndsWith(".txt");
             bool ValidMSCV;
             bool ValidSystem;
+            //Checks both the systeminfo and also MSCV file to ensure there validity as much as possible
             if (ValidMSCVPath == true && ValidMSCVExt == true)
             {
                 ValidMSCV = true;
@@ -392,6 +407,7 @@ namespace Windows_Buster_WPF_UI
             {
                 ValidSystem = false;
             }
+            // if it is true call the WES.py file with the arguments -C MSCV_FILE -F SYSTEM_INFO_PATH
             if (ValidSystem == true && ValidMSCV == true)
             {
                 ProcessStartInfo start = new ProcessStartInfo();
@@ -416,6 +432,7 @@ namespace Windows_Buster_WPF_UI
                     stdout = process.StandardOutput.ReadToEnd();
                     stderr = process.StandardError.ReadToEnd();
                 }
+                //Read the output of stdout simply push to the screen this is much much easier then reading it from the file.
                 Debug.WriteLine(stdout);
                 Debug.WriteLine(stderr);
                 DisplayVulns.Text = stdout;
@@ -423,6 +440,7 @@ namespace Windows_Buster_WPF_UI
             }
             else
             {
+                //If the files turn out to be invalid print what needs to be changed in order to run the vuln search
                 if(ValidMSCV == false)
                 {
                     GetVulnStatus.Content = "INVALID MSCV ENTRY: MUST POINT TO AN EXISTING .csv FILE";

@@ -23,6 +23,7 @@ def SystemInfo(FilePath):
     print("\n")
     PowerShellScript = open(FilePath.lstrip(),'w') #Opens The PowerShellScript file in the specified path. This is used to write system commands to run should we be unable to get updatermation using python methods. 
     subprocess.run(["powershell","-Command","systeminfo | Set-Content -Path .\Results.txt"]) #Runs the subprocess to produce the results.txt file
+    #Order of running for CLI-PS we esentially just go through these procedurally
     BasicSystemInformation(PowerShellScript)
     WindowsUpdates(PowerShellScript)
     EnviromentVariables(PowerShellScript)
@@ -46,12 +47,14 @@ def DrivesInformation(PowerShellScript):
     print("\n" + "\033[1m" + Fore.RED + "Drives Information [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nDRIVES INFORMATION [*]")
     DRIVE_TYPES = {0:"Unknown",1:"No Root Directory",2:"Removable Disk",3:"Local Disk",4:"Network Drive",5:"Compact Disc",6:"RAM Disk"}
+    #These are the different drive typtes the Win32_LogicalDisk can have.
     for drive in c.Win32_LogicalDisk():
-        SpaceConversion = ByteConversion(drive.FreeSpace)
+        #Enumerate and get every drive object within Win32_LogicalDisk
+        SpaceConversion = ByteConversion(drive.FreeSpace) #Call the byteconversion and convert this raw number of bytes into something a bit more displayable
         caption = drive.Caption + "\\"
         File_Mode = os.stat(caption).st_mode
         Unix_Permissions = stat.filemode(File_Mode) #This gets unix like permissions on each of our drives using os.stat and stat modules
-        InformationObject = win32api.GetVolumeInformation(caption)
+        InformationObject = win32api.GetVolumeInformation(caption)#We utilise a win 32 API call to get some further information on a drive such as its file system + label
         VolumeLabel = InformationObject[0]
         FileSystem = InformationObject[4]
         print('Caption: ' + Fore.CYAN + caption + " " + Style.RESET_ALL +
@@ -61,10 +64,12 @@ def DrivesInformation(PowerShellScript):
         'File System: ' + Fore.CYAN + FileSystem + Style.RESET_ALL + " " +
         'File Permissions: ' + Fore.CYAN + Unix_Permissions + Style.RESET_ALL)
         PowerShellScript.write('\nCaption: ' + caption + 'Type: ' + VolumeLabel + 'Avaliable Space: ' + SpaceConversion + 'File System: ' + FileSystem + 'File Permissions: ' + Unix_Permissions)
+        #Big ass print statement and file write
 
 
 ##SOURCE: https://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
 def ByteConversion(Bytes):
+    #This functions takes in an float which repersents our bytes and converts it into a proper demonantion. i.e  instead of displaying 1024B we do 1KB etc.
     Bytes = int(Bytes)
     suffixes=["B","KB","MB","GB","TB"]
     suffixIndex = 0
@@ -72,7 +77,7 @@ def ByteConversion(Bytes):
         suffixIndex += 1
         Bytes = Bytes/1024.0
     factor = 10 
-    RoundedBytes = math.floor(Bytes * factor) / factor
+    RoundedBytes = math.floor(Bytes * factor) / factor #I chose to always round down as its a better repersentation of avaliable space then rounding up.
     ConcatBytes = str(RoundedBytes) +" "+suffixes[suffixIndex]
     return ConcatBytes
 
@@ -81,17 +86,19 @@ def ByteConversion(Bytes):
 def UACConfiguration(PowerShellScript):
     UAC_Options = {0:"No Prompting",1:"Prompt On Secure Desktop",2:"Prompt Permit Deny On Secure Desktop",3:"Prompt For Creds Not On Secure Desktop",
     4:"Prompt For Permit Deny Not On Secure Desktop",5:"Prompt For Non Windows Binaries"}
+    #Different UAC options that the registies contain pretty cool found it on the above website.
     Key_Index = 0
     Consent_Prompt_Admin = None
     Consent_Prompt_User = None
     LUA_Enabled = None
     LocalAccountToken = None
     AdminsitratorToken = None
+    #Initialize all our variables as None here as when we iterate over the registry we have no idea if these actually will be filled or even be in the registry
     print("\n" + "\033[1m" + Fore.RED + "UAC Configuration [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nUAC CONFIGURATION [*]")
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
-        with winreg.OpenKey(machine_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System',0,winreg.KEY_READ) as UAC_key:
-            while True:
+        with winreg.OpenKey(machine_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System',0,winreg.KEY_READ) as UAC_key: #This UAC_key allows us to access all the Key,Value pairs we want
+            while True:# This while loops enumerates over the registry until it reaches the end (osError) checking for whether it finds one of the keys we want above
                 try:
                     KeyValue = winreg.EnumValue(UAC_key,Key_Index)
                     if KeyValue[0] == 'ConsentPromptBehaviorAdmin':
@@ -108,7 +115,7 @@ def UACConfiguration(PowerShellScript):
                 except OSError:
                     break
     print("ConsentPromptBehaviorAdmin: " + Fore.CYAN + UAC_Options[Consent_Prompt_Admin] + Style.RESET_ALL)
-    PowerShellScript.write("\nConsentPromptBehaviorAdmin: " + UAC_Options[Consent_Prompt_Admin])
+    PowerShellScript.write("\nConsentPromptBehaviorAdmin: " + UAC_Options[Consent_Prompt_Admin]) #Call the value in the dictionary and print the description
     print("ConsentPromptBehaviorUser: " + Fore.CYAN + UAC_Options[Consent_Prompt_User] + Style.RESET_ALL)
     PowerShellScript.write("\nConsentPromptBehaviorUser: " + UAC_Options[Consent_Prompt_User])
     if LUA_Enabled == 1:
@@ -141,11 +148,13 @@ def UACConfiguration(PowerShellScript):
 #https://blog.joeware.net/2018/07/07/5842/
 #https://www.ultimatewindowssecurity.com/wiki/page.aspx?spid=NSrpcservers
 def NTLMSettings(PowerShellScript):
+    #Here is all the NTLM settings avaliable that we can search for. This dictionary allows us to match a number to description
     CompatibilityDict = {0:"Send LM & NTLM Responses",1:"Send LM & NTLM - use NTLMv2 session security if negotiated",2:"Send NTLM response only",3:"Send NTLMv2 response only",4:"Send NTLMv2 response only.Refuse LM",5:"Send NTLMv2 response only. Refuse LM & NTLM"}
     print("\n" + "\033[1m" + Fore.RED + "Enumerating NTLM Settings [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nENUMERATING NTLM SETTINGS [*]")
     Key_Index = 0
     LmCompatibilityLevel = None
+    #Again enumerating over the registry as we did before
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
         with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Control\\Lsa',0,winreg.KEY_READ) as CompatibilityLevelReg:
             while True:
@@ -163,6 +172,8 @@ def NTLMSettings(PowerShellScript):
         else:
             print("LanManCompatibilityLevel: " + Fore.CYAN + CompatibilityDict[LmCompatibilityLevel] + Style.RESET_ALL)
             PowerShellScript.write("\nLanManCompatibilityLevel: " + CompatibilityDict[LmCompatibilityLevel])
+            #here this should unlesss something really werid is happening always be present and in the same index therefore we dont have to enumerate and instead use and specific index for KVP
+            # Gets workstation settings (Client side) 
         with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Services\\LanmanWorkstation\\Parameters',0,winreg.KEY_READ) as LanManWorkStation:
             ClientRequireSigning = winreg.EnumValue(LanManWorkStation, 2)[1]
             ClientNegotiateSigning = winreg.EnumValue(LanManWorkStation, 1)[1]
@@ -178,6 +189,7 @@ def NTLMSettings(PowerShellScript):
             else:
                 print("ClientNegotiateSigning: " + Fore.RED + "False" + Style.RESET_ALL)
                 PowerShellScript.write("\nClientNegotiateSigning: " + "False")
+            #Gets Server Settings
         with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Services\\LanManServer\\Parameters',0,winreg.KEY_READ) as LanManServer:
             ServerRequireSigning = winreg.EnumValue(LanManServer,6)[1]
             ServerNegotiateSigning = winreg.EnumValue(LanManServer,5)[1]
@@ -193,6 +205,7 @@ def NTLMSettings(PowerShellScript):
             else:
                 print("ServerNegotiateSigning: " + Fore.RED + "False" + Style.RESET_ALL)
                 PowerShellScript.write("\nServerNegotiateSigning: " + "False")
+            #Check for any LDAP settings again we have a registry here that dosent need to be enumerated
         with winreg.OpenKey(machine_key,'System\\CurrentControlSet\\Services\\LDAP',0,winreg.KEY_READ) as LDAPKey:
             LDAPSigning = winreg.EnumValue(LDAPKey,0)[1]
             if LDAPSigning == 1:
@@ -204,6 +217,7 @@ def NTLMSettings(PowerShellScript):
             else:
                 print("LDAPSigning : No signing/sealing")
                 PowerShellScript.write("\nLDAPSigning : No signing/sealing")
+        #Here we can't be 100% sure that these registries exist (at least on my windows 10 host they didnt) therefore we do some enumeration
         with winreg.OpenKey(machine_key,'SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0',0,winreg.KEY_READ) as SessionSecKey:
             Key_Index = 0
             NTLMinClientSec = None
@@ -230,6 +244,7 @@ def NTLMSettings(PowerShellScript):
                     Key_Index += 1
                 except OSError:
                     break
+            #For some reason NTLM has a really werid number scheme but here we esentially just do and if,elif chain printing the description that matches the number
             if NTLMinClientSec == 536870912:
                 print("NTLMinClientSec: " + Fore.CYAN + str(NTLMinClientSec) + Style.RESET_ALL +" "+ "Description: " + Fore.CYAN + "128-bit encryption. If the value of either this entry or the NtlmMinClientSec entry is 0x20000000, then the connection will fail unless 128-bit encryption is negotiated"
                 + Style.RESET_ALL)
@@ -287,6 +302,7 @@ def Printers(PowerShellScript):
     objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
     objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
     colItems = objSWbemServices.ExecQuery("SELECT * FROM Win32_Printer")
+    #Here we get all objects from the root\cimv2 namespace and from Win32_Printer this contained all the printer information we needed
     for printer in colItems:
         print("Printer: " + Fore.CYAN + printer.Name + Style.RESET_ALL + " " + "Printer Status: " + 
         Fore.CYAN + printer.Status + Style.RESET_ALL + " " + "Network: " + Fore.CYAN + str(printer.Network) + 
@@ -307,6 +323,7 @@ def NetVersions(PowerShellScript):
                             CLRVersions.append(entry.name)
             except NotADirectoryError:
                 pass
+    #These may change but these are the default .NET's on the system here we just get the version number from both there Keys in there respective registries
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
         with winreg.OpenKey(machine_key,'Software\\Microsoft\\NET Framework Setup\\NDP\\v3.5',0,winreg.KEY_READ) as dotNet35Version_Key:
             version = winreg.EnumValue(dotNet35Version_Key,4)[1]
@@ -330,6 +347,7 @@ def EicarAVTesting(PowerShellScript):
     objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
     objSWbemServices = objWMIService.ConnectServer(strComputer,"root\SecurityCenter2")
     colItems = objSWbemServices.ExecQuery("SELECT * FROM AntiVirusProduct")
+    #Very very useful here we can use the root\SecurityCenter2 and get a load of information from the AntiVirusProduct objects.
     print("\n" + "\033[1m" + Fore.RED + "Anti-Virus Information [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nANTI-VIRUS INFORMATION [*]")
     for obj in colItems: #All anti-virus products have these options here we get information about all products on the windows system
@@ -353,6 +371,7 @@ def EicarAVTesting(PowerShellScript):
             print("Product State: " +Fore.CYAN + str(obj.productState) + Style.RESET_ALL)
             PowerShellScript.write("\nProduct State: " + str(obj.productState))
         print("\n")
+    #Get Spyware instead of AntiVirus
     spywareObjects = objSWbemServices.ExecQuery("SELECT * FROM AntiSpywareProduct")
     print("\n" + "\033[1m" + Fore.RED + "Anti-Spyware Information [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nANTI-SPYWARE INFORMATION [*]")
@@ -393,16 +412,18 @@ def EicarAVTesting(PowerShellScript):
 
 
 def InternetSettings(PowerShellScript):
-    UserInternetSettings = GetUserInternetSettings()
+    UserInternetSettings = GetUserInternetSettings() #Get a dict of settings from Respective registries
     MachineInternetSettings = GetMachineInternetSettings()
     print("\n")
     print("\033[1m" + Fore.RED + "User Internet Settings [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nUSER INTERNET SETTINGS [*]")
+    #go through every key in the UserInternet dict print values.
     for user_key in UserInternetSettings:
         print(user_key + ":" + Fore.CYAN + str(UserInternetSettings[user_key]) + Style.RESET_ALL)
         PowerShellScript.write("\n"+user_key + ":" + str(UserInternetSettings[user_key]))
     print("\n")
     print("\033[1m" + Fore.RED + "Machine Internet Settings [*]" + Style.RESET_ALL + "\033[0m")
+    #go through every key in the MachineInternet dict print values
     PowerShellScript.write("\nMACHINE INTERNET SETTINGS [*]")
     for machine_key in MachineInternetSettings:
         print(machine_key + ":" + Fore.CYAN + str(MachineInternetSettings[machine_key]) + Style.RESET_ALL)
@@ -412,6 +433,7 @@ def GetUserInternetSettings():
     UserSettings = {}
     Key_Index = 0
     with winreg.ConnectRegistry(None,winreg.HKEY_CURRENT_USER) as user_key:
+        #Get every single KVP from the registry
         with winreg.OpenKey(user_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',0,winreg.KEY_READ) as Internet_Key:
             while True:
                 try:
@@ -426,6 +448,7 @@ def GetMachineInternetSettings():
     MachineSettings = {}
     Key_Index = 0
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as machine_key:
+        #Get every single KVP from the registry
         with winreg.OpenKey(machine_key,'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',0,winreg.KEY_READ) as Internet_Key:
             while True:
                 try:
@@ -441,12 +464,14 @@ def CachedCredentials(PowerShellScript):
     print("\033[1m" + Fore.RED + "Number Of Cached Credentials [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nNUMBER OF CACHED CREDENTIALS [*]")
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as key:
+        #This is a default registry therefore we can use an set index
         with winreg.OpenKey(key,'SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon',0,winreg.KEY_READ) as winlogon_key:
             Check_Cached_Credentials = winreg.EnumValue(winlogon_key,2)[1]
     print("NoOfCachedCredentials: " + Fore.GREEN + Check_Cached_Credentials + Style.RESET_ALL)
     PowerShellScript.write("\nNoOfCachedCredentials:" + Check_Cached_Credentials)
     
 def WDigest(PowerShellScript):
+    #This function gets the wdigest settings dosent return anything just prints em.
     print("\n")
     print("\033[1m" + Fore.RED + "WDigest Settings [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nWDIGEST SETTINGS [*]")
@@ -477,9 +502,10 @@ def GetLSAProtection(PowerShellScript): #Checks for LSA Protection. If enabled a
     LSASettings = {}
     Key_Index = 0
     LSAEnabled = False
+    #Non-standard registry we must enumerate over it
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as hkey:
         with winreg.OpenKey(hkey,'SYSTEM\\CurrentControlSet\\Control\\LSA',0,winreg.KEY_READ) as LSA_key:
-            while True:
+            while True: #Here we get every key,value and store it in the LSASettings dict.
                 try:
                     Check_LSA_Enabled = winreg.EnumValue(LSA_key,Key_Index)
                     LSASettings[Check_LSA_Enabled[0]] = Check_LSA_Enabled[1]
@@ -493,6 +519,7 @@ def GetLSAProtection(PowerShellScript): #Checks for LSA Protection. If enabled a
     PowerShellScript.write("\nLSAEnabled: " + str(LSAEnabled))
     print("\n"+Fore.GREEN + "LSASettings: "+ Style.RESET_ALL)
     PowerShellScript.write("\nLSASettings: ")
+    #Here we get every key and print out there value and save it to the output file.
     for key in LSASettings:
         print(key + ": " + Fore.CYAN + str(LSASettings[key]) + Style.RESET_ALL)
         PowerShellScript.write("\n"+key+":"+str(LSASettings[key]))
@@ -514,6 +541,7 @@ def CredentialGuard(PowerShellScript): #Checks for credential guard if active a 
                     Key_Index += 1
                 except OSError:
                     break
+    #Credential guard has 3 numbers that i could identify 0-2 i used this else assuming that someone wouldnt change credential guard to something werid like 2000
     if CredentialGuardEnabled == 0:
         print(Fore.RED + "CREDENTIAL GUARD DISABLED" + Style.RESET_ALL)
         PowerShellScript.write("\nCREDENTIAL GUARD DISABLED")
@@ -526,6 +554,7 @@ def CredentialGuard(PowerShellScript): #Checks for credential guard if active a 
     Key_Index = 0
     VirtualizationBasedSecurityEnabled = 0
     PlatformSecurityFeatures = 0
+    #Predefine variables just in case we dont find it in the registry
     with winreg.ConnectRegistry(None,winreg.HKEY_LOCAL_MACHINE) as mkey:
         with winreg.OpenKey(mkey,'SYSTEM\\CurrentControlSet\\Control\\DeviceGuard',0,winreg.KEY_READ) as virtual_key:
             while True:
@@ -538,6 +567,7 @@ def CredentialGuard(PowerShellScript): #Checks for credential guard if active a 
                     Key_Index += 1
                 except OSError:
                     break
+    #Get virtualization and platfor security settings using there various number ID's that correspond to various settings
     print("\n")
     print("\033[1m" + Fore.RED + "Virtualization Based Security Settings [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nVIRTUALIZATION BASED SECURITY SETTINGS [*]")
@@ -575,6 +605,7 @@ def WindowsUpdates(PowerShellScript):
     printWindowsUpdateList(WindowsUpdateList,PowerShellScript)
 
 def printWindowsUpdateList(WindowsUpdateList,PowerShellScript):
+    #Simply print function just for some seperation. Takes in the WindowsUpdateList and prints every update found within the WindowsUpdateList
     print("\033[1m" + Fore.RED + "WINDOWS UPDATE LIST [*]" + Style.RESET_ALL + "\033[0m")
     PowerShellScript.write("\nWINDOWS UPDATE LIST [*]")
     for update in WindowsUpdateList:
@@ -604,6 +635,7 @@ def EnviromentVariables(PowerShellScript):
         if key not in SystemEnviromentVariables:
             value = os.environ[key]
             UserEnvironmentVariables[key] = value
+    #Above we get specific system-enviroment variables compare them to the list of all env variables (os.environ) and seperate them out into 2 columns those that are user and those that are system
     print("\033[1m" + Fore.RED + "ENVIRONMENT VARIABLES [*]" + Style.RESET_ALL + "\033[0m" +"\n")
     PowerShellScript.write("\nENVIRONMENT VARIABLES [*]")
     print(Fore.GREEN + "SYSTEM VARIABLES : " + Style.RESET_ALL)
@@ -619,7 +651,7 @@ def EnviromentVariables(PowerShellScript):
         PowerShellScript.write("\nNAME : " + key + "VALUE : " + UserEnvironmentVariables[key])
 
 def GetSettingsPSAudiitWefLaps(PowerShellScript):
-    PSSettings = GetPSSettings()
+    PSSettings = GetPSSettings() #Returns a list of various ps settings such as powershell versions transcripts etc.
     PrintPSSettings(PSSettings,PowerShellScript)
 
 #https://book.hacktricks.xyz/windows/windows-local-privilege-escalation#powershell-transcript-files source on what settings are important too look for
@@ -765,11 +797,11 @@ def BasicSystemInformation(PowerShellScript):
                         KeyIndex += 1
                 except OSError: #Once we reach the end of the subkey it will cause an OSError this is how we break out of the loop
                     break
-    is_admin = CheckAdmin()
-    is_VM = CheckVM()
-    Hotfixes = Hotfix()
+    is_admin = CheckAdmin() #Returns a boolean stating whether were running as an admin or not
+    is_VM = CheckVM() #Returns a boolean stating whether we are running as an admin or not
+    Hotfixes = Hotfix() #Returns a list of hotfixes
     PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMajorVersionNumber,Current_Version,is_admin,is_VM,PowerShellScript)
-    PrintMicrosoftHotfixes(Hotfixes,PowerShellScript)
+    PrintMicrosoftHotfixes(Hotfixes,PowerShellScript) #Simple print function that we can enumerate and list all the hotfixes applied to the system
 
 def PrintMicrosoftHotfixes(Hotfixes,PowerShellScript):
     print("\n")
@@ -795,18 +827,18 @@ def Hotfix():
     objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
     objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
     colItems = objSWbemServices.ExecQuery("SELECT * FROM Win32_QuickFixEngineering")
+    #This gets every hotfix within the Win32_QuickFixEngineering object. 
     for hotfix in colItems:
         HotFixList.append(hotfix)
     return HotFixList
 
-##TODO TEST THIS FUNCTION WITHIN A VM
 ## SOURCE: https://www.activexperts.com/admin/scripts/wmi/python/0383/
 ## SOURCE: https://stackoverflow.com/questions/498371/how-to-detect-if-my-application-is-running-in-a-virtual-machine
 def CheckVM():
     strComputer = "."
     objWMIService = win32com.client.Dispatch("WbemScripting.SWbemLocator")
     objSWbemServices = objWMIService.ConnectServer(strComputer,"root\cimv2")
-    colItems = objSWbemServices.ExecQuery("SELECT * FROM Win32_ComputerSystem")
+    colItems = objSWbemServices.ExecQuery("SELECT * FROM Win32_ComputerSystem") #This basically checks a bunch of common stuff for an VM this aims to cover most stuff but likely some obscure VM program wouldnt be covered
     for obj in colItems:
         if obj.Manufacturer != None:
             manufacturer = obj.Manufacturer
@@ -818,7 +850,7 @@ def CheckVM():
         return False
 
 def CheckAdmin():
-    is_admin = ctypes.windll.shell32.IsUserAnAdmin()
+    is_admin = ctypes.windll.shell32.IsUserAnAdmin() #We can use ctyped to check whether we are running as an administrator user 
     if is_admin == 0:
         is_admin = False
     else:
@@ -867,8 +899,10 @@ def PrintBasicOsInformation(Product_Name,Edition_ID,Release_ID,Branch,CurrentMaj
 def Parse_Arguments():
     Valid_Short_Options = ['-S','-L','-U','-N','-P','-E','-A','-D','-W']
     Valid_Long_Options = ['--SystemInfo','--Logging','--UserPrivileges','--Network','--Processes','--Services','--Applications','--Services','--PathDLL','--WindowsCredentials','--FileOutput']
+    # We can specify long|short options for arguments the GUI mainly calls using short options becuase it's less characters
+    #We have a bunch of options that do nothing and are left in too show expansion
     parse = argparse.ArgumentParser()
-    options = parse.add_mutually_exclusive_group(required=True)
+    options = parse.add_mutually_exclusive_group(required=True) #This means that enviroment variables are mutually exclusing i.e -S cant be with -L 
     options.add_argument('-S','--SystemInfo',action='store_true',help='This optional argument will find OS version, system architecture, list patches/security patches & PowerShell history')
     options.add_argument('-L','--Logging',action='store_true',help='Provides user information on anti-virus and provides information on whether certain windows protections such as LSA protection is present')
     options.add_argument('-U','--UserPrivileges',action='store_true',help='Checks current users privileges + token clipboards and other information on users')
@@ -879,7 +913,8 @@ def Parse_Arguments():
     options.add_argument('-D','--PathDLL',action='store_true',help='Check whether write permissions exist inside a folder in PATH')
     options.add_argument('-W','--WindowsCredentials',action='store_true',help='Aims to check any credentials on the system such as those from WinLogon and any stored Wi-Fi connections as well as saved RDP connections and recently run commands')
     parse.add_argument('-F','--FileOutput',help='Directory/Filename where the powershell code shall be written too (note that if the file does not exist it will be created automatically',required=True)
-    arguments = parse.parse_args()
+    arguments = parse.parse_args() #Gets all the values from the arguments passed in the function
+    #Really dumb way to make sure that the output path is valid this is mainly for CLI usage GUI performs its own authentication on files.
     ArgumentsProvided = False
     while ArgumentsProvided == False:
         SplitPath = arguments.FileOutput.rsplit('\\',1)[0]
@@ -894,24 +929,10 @@ def Parse_Arguments():
     return arguments
 
 if __name__ == '__main__':
+    #Here we only get systeminfo but we can expand greatly and do a load of stuff more. I didnt realise how much stuff was in one section
     arguments = Parse_Arguments()
     if arguments.SystemInfo == True:
         SystemInfo(arguments.FileOutput)
         print("CREATED_FILE")
-    if arguments.Logging == True:
-        Logging(arguments.FileOutput)
-    if arguments.UserPrivileges == True:
-        UserPrivileges(arguments.FileOutput)
-    if arguments.Network == True:
-        Network(arguments.FileOutput)
-    if arguments.Processes == True:
-        Processes(arguments.FileOutput)
-    if arguments.Services == True:
-        Services(arguments.FileOutput)
-    if arguments.Applications == True:
-        Applications(arguments.FileOutput)
-    if arguments.PathDLL == True:
-        PathDLL(arguments.FileOutput)
-    if arguments.WindowsCredentials == True:
-        WindowsCredentials(arguments.FileOutput)
+
     

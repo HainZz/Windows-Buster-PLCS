@@ -8,14 +8,20 @@
         Title="Windows-Buster-PLCS" Height="750" Width="750">
     <Grid>
         <TabControl>
+        <!--Here we using the TabControl in order to create higher order tabs that point to the different tools within the toolkit-->
             <TabItem Header="View-Windows-Information">
                 <TabControl>
+                <!--Sub tabs for the Windows-Information module-->
                     <TabItem Header="View-System-Information">
                         <ScrollViewer>
+                        <!--Interlace stack panels and wrap panels to allows us to but objects vertically or horizontally on the window-->
+                        <!--x:Name allows us to access the object within the .cs (code behind file)-->
                             <StackPanel>
                                 <WrapPanel>
                                     <Button x:Name="DisplaySystemInformation" Width="250" Height="50" Click="DisplaySystemInformation_Click">Get System Information</Button>
+                                    <!--Click points to an function in the .cs file that performs various actions (even driven programming :0)-->
                                     <Label x:Name="RanCLILabel" Content=""></Label>
+                                    <!--We can leave the Content="" of a label empty and fill it in later if we want some kind of pop-up menu on the GUI-->
                                 </WrapPanel>
                                 <WrapPanel>
                                     <Button x:Name="LoadFileOption" Width="250" Height="20" Click="LoadFileOption_Click">Input Output File</Button>
@@ -65,6 +71,7 @@
                     </TabItem>
                 </TabControl>
             </TabItem>
+            <!--This is the XAML for the Vuln-Suggester tab-->
             <TabItem Header="Windows Vuln Suggester">
                 <ScrollViewer>
                     <StackPanel>
